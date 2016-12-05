@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)http://v4-alpha.getbootstrap.com/examples/navbar/ -->
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://v4-alpha.getbootstrap.com/favicon.ico">
+
+    <title>Navbar Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/navbar.css" rel="stylesheet">
+
+    <style>
+      body { color: #666; font-family: sans-serif; line-height: 1.4; }
+      h1 { color: #444; font-size: 1.2em; padding: 14px 2px 12px; margin: 0px; }
+      h1 em { font-style: normal; color: #999; }
+      a { color: #888; text-decoration: none; }
+      #wrapper { width: 400px; margin: 40px auto; }
+      
+      ol { padding: 0px; margin: 0px; list-style: decimal-leading-zero inside; color: #ccc; width: 460px; border-top: 1px solid #ccc; font-size: 0.9em; }
+      ol li { position: relative; margin: 0px; padding: 9px 2px 10px; border-bottom: 1px solid #ccc; cursor: pointer; }
+      ol li a { display: block; text-indent: -3.3ex; padding: 0px 0px 0px 20px; }
+      li.playing { color: #aaa; text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.3); }
+      li.playing a { color: #000; }
+      li.playing:before { content: '♬'; width: 14px; height: 14px; padding: 3px; line-height: 14px; margin: 0px; position: absolute; left: -24px; top: 9px; color: #000; font-size: 13px; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.2); }
+      
+      #shortcuts { position: fixed; bottom: 0px; width: 100%; color: #666; font-size: 0.9em; margin: 60px 0px 0px; padding: 20px 20px 15px; background: #f3f3f3; background: rgba(240, 240, 240, 0.7); }
+      #shortcuts div { width: 460px; margin: 0px auto; }
+      #shortcuts h1 { margin: 0px 0px 6px; }
+      #shortcuts p { margin: 0px 0px 18px; }
+      #shortcuts em { font-style: normal; background: #d3d3d3; padding: 3px 9px; position: relative; left: -3px;
+        -webkit-border-radius: 4px; -moz-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px;
+        -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); -o-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); }
+
+      @media screen and (max-device-width: 480px) {
+        #wrapper { position: relative; left: -3%; }
+        #shortcuts { display: none; }
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container">
+      <nav class="navbar navbar-light bg-faded">
+        <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="Toggle navigation"></button>
+        <div class="collapse navbar-toggleable-xs" id="navbar-header">
+          <a class="navbar-brand" href="http://v4-alpha.getbootstrap.com/examples/navbar/#">Navbar</a>
+          <ul class="nav navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="http://v4-alpha.getbootstrap.com/examples/navbar/#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://v4-alpha.getbootstrap.com/examples/navbar/#">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://v4-alpha.getbootstrap.com/examples/navbar/#">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="http://v4-alpha.getbootstrap.com/examples/navbar/#">About</a>
+            </li>
+          </ul>
+          <form class="form-inline float-xs-right">
+            <input class="form-control" type="text" placeholder="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </nav> <!-- /navbar -->
+
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search for..." id="search_input">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" id="search_button">Search</button>
+              </span>
+            </div><!-- /input-group -->
+          </div><!-- /.col-lg-6 -->
+        </div><!-- /.row -->
+      </div>
+
+      <div class="jumbotron">
+        <div id="wrapper">
+          <audio preload></audio>
+          <ol id="olly">
+            <li><a href="#" data-src="http://cs1-40v4.vk-cdn.net/p2/3653f7347c0a44.mp3?extra=l0FASn6tzfdO_S7hkLn-7n7fbXjHKDpBIGZ2fdop2s7B64I5mSbA_UOCwW0Y1dvhoRazUQvo-4hj8LMi-aGHmoywsGdzj2RFAw5zdggJqisH6ASnIhz-z3GnHStYpBrKaxsftRXMZw0RHSE">A State Of Trance 436 (Top 20 Of 2009) (24.12.2009)</a></li>
+            <li><a href="#" data-src="http://cs1-16v4.vk-cdn.net/p29/238afbe1f26074.mp3?extra=7W14B_RUSZlWnvLztQROyTpGFQlLsMgXUtlCBw_yYYxYt0APUzmRbuNZy1ya6070CvPk3weGfnKNPxCsAb0NtNpeOnx6kvswLF6EoXUvZOsZJu36gxhYsMMiUdruy8ZSBTAAfTHX14K788c">A State Of Trance 488 (Top 20 Of 2010) (23.12.2010)</a></li>
+            <li><a href="#" data-src="http://cs1-19v4.vk-cdn.net/p7/ff93a450c16bbe.mp3?extra=3WqtiO0Zz51JS681DRX_AS-9vJXTYOYQX-8IrEzlM78R5TWMjmHY0Z9GJ5QXqUy0b9eyLbz6RqrRJtWCYCuvkex_WfmULypYnOMxa52IKOJ_VxMAXZQmcnoMb4IY_HwIDDftzv5-syBr8PY">A State Of Trance 540 (Top 20 Of 2011) (22.12.2012)</a></li>
+            <li><a href="#" data-src="http://cs422619.vk.me/u3504388/audios/6738a49929d7.mp3?extra=0AInPNc4OrsJ0fL4TVLB96WYW3FxkP_HDZzB9mHzNVwPddA6nPdfGddcK_gFbvoQX6yrCltxOm_ZbOVxm1i1hSAsKn1Fhp95bYtzlBPa219sA5eyLXq9DaDv7wxedL8BY2zd3K4v8sG2">A State of Trance Episode 720 (2015-07-02)</a></li>
+          </ol>
+        </div>
+      </div>
+
+    </div> <!-- /container -->
+
+    <script src="static/js/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        $("#search_button").bind('click', function() {
+          var value = $('#search_input').val();
+          $.post('/search', { value: value }, function(data) {
+
+            $.each(data, function (index, item) {
+              $('<li/>')
+              .append($('<a/>').prop('href', '#').attr('data-src', item.link).text(item.title))
+              .appendTo('#olly')
+
+              initPlayer();
+            })
+          }, 'json');
+          
+          return false;
+        });
+      });
+    </script>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="static/js/audiojs/audio.min.js"></script>
+    <script src="static/js/player.js"></script>
+    
+    <script src="static/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
+    <script src="static/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="static/js/ie10-viewport-bug-workaround.js"></script>
+  
+  </body>
+</html>
