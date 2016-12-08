@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="http://v4-alpha.getbootstrap.com/favicon.ico">
 
-    <title>Navbar Template for Bootstrap</title>
+    <title>Viscacha Search</title>
 
     <!-- Bootstrap core CSS -->
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
@@ -53,10 +53,10 @@
       <nav class="navbar navbar-light bg-faded">
         <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="Toggle navigation"></button>
         <div class="collapse navbar-toggleable-xs" id="navbar-header">
-          <a class="navbar-brand" href="http://v4-alpha.getbootstrap.com/examples/navbar/#">Navbar</a>
+          <a class="navbar-brand" href="/">Viscacha Search</a>
           <ul class="nav navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="http://v4-alpha.getbootstrap.com/examples/navbar/#">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="http://v4-alpha.getbootstrap.com/examples/navbar/#">Features</a>
@@ -80,7 +80,7 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search for..." id="search_input">
+              <input type="text" class="form-control" placeholder="Search" id="search_input">
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button" id="search_button">Search</button>
               </span>
@@ -93,10 +93,6 @@
         <div id="wrapper">
           <audio preload></audio>
           <ol id="olly">
-            <li><a href="#" data-src="http://cs1-40v4.vk-cdn.net/p2/3653f7347c0a44.mp3?extra=l0FASn6tzfdO_S7hkLn-7n7fbXjHKDpBIGZ2fdop2s7B64I5mSbA_UOCwW0Y1dvhoRazUQvo-4hj8LMi-aGHmoywsGdzj2RFAw5zdggJqisH6ASnIhz-z3GnHStYpBrKaxsftRXMZw0RHSE">A State Of Trance 436 (Top 20 Of 2009) (24.12.2009)</a></li>
-            <li><a href="#" data-src="http://cs1-16v4.vk-cdn.net/p29/238afbe1f26074.mp3?extra=7W14B_RUSZlWnvLztQROyTpGFQlLsMgXUtlCBw_yYYxYt0APUzmRbuNZy1ya6070CvPk3weGfnKNPxCsAb0NtNpeOnx6kvswLF6EoXUvZOsZJu36gxhYsMMiUdruy8ZSBTAAfTHX14K788c">A State Of Trance 488 (Top 20 Of 2010) (23.12.2010)</a></li>
-            <li><a href="#" data-src="http://cs1-19v4.vk-cdn.net/p7/ff93a450c16bbe.mp3?extra=3WqtiO0Zz51JS681DRX_AS-9vJXTYOYQX-8IrEzlM78R5TWMjmHY0Z9GJ5QXqUy0b9eyLbz6RqrRJtWCYCuvkex_WfmULypYnOMxa52IKOJ_VxMAXZQmcnoMb4IY_HwIDDftzv5-syBr8PY">A State Of Trance 540 (Top 20 Of 2011) (22.12.2012)</a></li>
-            <li><a href="#" data-src="http://cs422619.vk.me/u3504388/audios/6738a49929d7.mp3?extra=0AInPNc4OrsJ0fL4TVLB96WYW3FxkP_HDZzB9mHzNVwPddA6nPdfGddcK_gFbvoQX6yrCltxOm_ZbOVxm1i1hSAsKn1Fhp95bYtzlBPa219sA5eyLXq9DaDv7wxedL8BY2zd3K4v8sG2">A State of Trance Episode 720 (2015-07-02)</a></li>
           </ol>
         </div>
       </div>
@@ -105,23 +101,30 @@
 
     <script src="static/js/jquery.min.js"></script>
     <script type="text/javascript">
+
       $(function() {
-        $("#search_button").bind('click', function() {
-          var value = $('#search_input').val();
-          $.post('/search', { value: value }, function(data) {
+        $('#search_input').keypress(function(e) {
+          if (e.which == 13) {
+            search();
+          }
+        });
 
-            $.each(data, function (index, item) {
-              $('<li/>')
-              .append($('<a/>').prop('href', '#').attr('data-src', item.link).text(item.title))
-              .appendTo('#olly')
-
-              initPlayer();
-            })
-          }, 'json');
-          
-          return false;
+        $('#search_button').click(function(event) {
+          search();
         });
       });
+
+      function search() {
+        var value = $('#search_input').val();
+        $.post('/search', { value: value }, function(data) {
+          $.each(data, function (index, item) {
+            $('<li/>')
+              .append($('<a/>').prop('href', '#').attr('data-src', item.link).text(item.title))
+              .appendTo('#olly')
+          })
+          initPlayer();
+        }, 'json');
+      }
     </script>
 
     <!-- Bootstrap core JavaScript
