@@ -1,5 +1,6 @@
-import urllib
+import urllib2
 import json
+
 
 class VkApi:
     def __init__(self, access_token):
@@ -7,17 +8,33 @@ class VkApi:
         self.__access_token = access_token
         self.__api_version = "5.60"
 
-    # https://api.vk.com/method/audio.search?v=5.60&access_token=0267407ef17542413c1883d1681a1aff6d07b8a8c2e24be83b0ad85606645d24a30d78f6ba057bd7ee45b&q=Armin%20van%20buuren
     def search(self, q):
         method_name = "audio.search"
-        uri = self.__uri + method_name + "?v=" + self.__api_version\
-         + "&access_token=" + self.__access_token + "&q=" + q
+        uri = self.__uri + method_name + "?v=" + self.__api_version + "&access_token=" + self.__access_token + "&q=" + q
+        uri = uri.replace(' ', '%20')
+
         response = self.__get_response(uri)
-        #return response
-        json_r = json.loads(response)
-        item_one = json_r["response"]["items"][0]
-        return str(item_one["artist"]) + " - " + item_one["title"]
+        json_result = json.loads(response)
+
+        result = []
+
+        for item in json_result["response"]["items"]:
+            audio = Audio(item["artist"] + " - " + item["title"], item["url"])
+            result.append(audio)
+
+        return json.dumps(result, cls=AudioJsonEncoder)
 
     def __get_response(self, url):
-        u = urllib.urlopen(url)
+        u = urllib2.urlopen(url)
         return u.read()
+
+class Audio(object):
+    def __init__(self, title, link):
+        self.title = title
+        self.link = link
+
+class AudioJsonEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Audio):
+            return obj.__dict__
+        return obj
