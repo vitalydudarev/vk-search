@@ -75,6 +75,16 @@
         </div>
       </nav> <!-- /navbar -->
 
+      <div class="modal fade" id="waitDialogModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4>Searching...</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
         <div class="row">
@@ -102,6 +112,8 @@
     <script src="static/js/jquery.min.js"></script>
     <script type="text/javascript">
 
+      var waitDialog = $('#waitDialogModal');
+
       $(function() {
         $('#search_input').keypress(function(e) {
           if (e.which == 13) {
@@ -115,6 +127,8 @@
       });
 
       function search() {
+        showWaitDialog();
+
         var value = $('#search_input').val();
         $.post('/search', { value: value }, function(data) {
           $.each(data, function (index, item) {
@@ -122,9 +136,20 @@
               .append($('<a/>').prop('href', '#').attr('data-src', item.link).text(item.title))
               .appendTo('#olly')
           })
+          
           initPlayer();
+          closeWaitDialog();
         }, 'json');
       }
+
+      function showWaitDialog() {
+        waitDialog.modal('show');
+      }
+
+      function closeWaitDialog() {
+        waitDialog.modal('hide');
+      }
+
     </script>
 
     <!-- Bootstrap core JavaScript
