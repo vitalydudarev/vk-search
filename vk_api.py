@@ -3,10 +3,11 @@ import json
 
 
 class VkApi:
-    def __init__(self, access_token):
+    def __init__(self, access_token, proxy):
         self.__uri = "https://api.vk.com/method/"
         self.__access_token = access_token
         self.__api_version = "5.60"
+        self.__proxy = proxy
 
     def search(self, q):
         method_name = "audio.search"
@@ -25,6 +26,11 @@ class VkApi:
         return json.dumps(result, cls=AudioJsonEncoder)
 
     def __get_response(self, url):
+        if len(self.__proxy) > 0:
+            proxy = urllib2.ProxyHandler(self.__proxy)
+            opener = urllib2.build_opener(proxy)
+            urllib2.install_opener(opener)
+
         u = urllib2.urlopen(url)
         return u.read()
 
