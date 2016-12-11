@@ -25,8 +25,8 @@
       a { color: #888; text-decoration: none; }
       #wrapper { width: 100%; margin: 10px auto; }
       
-      ol { padding: 0px; margin: 00px;  color: #ccc; width: 100%; font-size: 0.9em; }
-      ol li { position: relative; margin: 0px; padding: 9px 2px 10px; border-bottom: 1px solid #ccc; cursor: pointer; }
+      ol { padding: 0px; margin: 20px; color: #ccc; width: 100%; font-size: 0.9em; }
+      ol li { position: relative; margin: 0px; padding: 2px 5px 2px; border-bottom: 1px solid #ccc; cursor: pointer; }
       ol li a { display: block; text-indent: -3.3ex; padding: 0px 0px 0px 20px; }
       li.playing { color: #aaa; text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.3); }
       li.playing a { color: #000; }
@@ -87,7 +87,7 @@
 
       <div class="jumbotron">
         <div id="wrapper">
-          <audio preload></audio>
+          <audio preload="none"></audio>
           <ol id="audio_list">
           </ol>
         </div>
@@ -96,7 +96,6 @@
     </div> <!-- /container -->
 
     <script src="static/js/jquery.min.js"></script>
-    
     <script src="static/js/audiojs/audio.min.js"></script>
     <script src="static/js/player.js"></script>
     
@@ -104,7 +103,7 @@
     <script src="static/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="static/js/ie10-viewport-bug-workaround.js"></script>
-    
+
     <script type="text/javascript">
 
       var waitDialog = $('#waitDialogModal1');
