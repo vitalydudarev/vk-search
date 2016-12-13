@@ -13,40 +13,48 @@
     <title>Viscacha Search</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/navbar.css" rel="stylesheet">
     <link href="static/css/audio.css" rel="stylesheet" type="text/css">
+    <link href="static/css/offcanvas.css" rel="stylesheet">
   </head>
 
   <body>
 
-    <div class="container">
-      <nav class="navbar navbar-light bg-faded">
-        <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="Toggle navigation"></button>
-        <div class="collapse navbar-toggleable-xs" id="navbar-header">
-          <a class="navbar-brand" href="/">Viscacha Search</a>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Viscacha search</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="/audios">My Audios <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="http://v4-alpha.getbootstrap.com/examples/navbar/#">Pricing</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="http://v4-alpha.getbootstrap.com/examples/navbar/#">About</a>
+            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/audios">My Audios</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
             </li>
           </ul>
-          <form class="form-inline float-xs-right">
-            <input class="form-control" type="text" placeholder="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
-        </div>
-      </nav> <!-- /navbar -->
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
 
       <div class="modal fade" id="waitDialogModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
@@ -72,8 +80,8 @@
     <script src="static/js/audiojs/audio.min.js"></script>
     <script src="static/js/player.js"></script>
     
-    <script src="static/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
-    <script src="static/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+    <script src="static/js/tether.min.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="static/js/ie10-viewport-bug-workaround.js"></script>
 
