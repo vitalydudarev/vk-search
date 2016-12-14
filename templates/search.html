@@ -72,14 +72,6 @@
 
       <hr>
 
-      <div class="jumbotron">
-        <div id="wrapper">
-          <audio preload="none" id="player"></audio>
-          <ol id="search_results">
-          </ol>
-        </div>
-      </div>
-
       <div class="modal fade" id="waitDialogModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -90,9 +82,26 @@
         </div>
       </div>
 
+      <div class="jumbotron">
+        <div id="wrapper">
+          <audio preload="none"></audio>
+          <ol id="search_results">
+          </ol>
+        </div>
+      </div>
+
     </div>
 
     <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/audiojs/audio.min.js"></script>
+    <script src="static/js/player.js"></script>
+
+    <script src="static/js/tether.min.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="static/js/ie10-viewport-bug-workaround.js"></script>
+
+
     <script type="text/javascript">
 
       var waitDialog = $('#waitDialogModal');
@@ -122,6 +131,7 @@
               .appendTo('#search_results')
           })
           
+          initPlayer();
           closeWaitDialog();
         }, 'json');
       }
@@ -139,12 +149,6 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="static/js/audiojs/audio.min.js"></script>
-    <script src="static/js/player.js"></script>
-    <script src="static/js/tether.min.js"></script>
-    <script src="static/bootstrap/js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="static/js/ie10-viewport-bug-workaround.js"></script>
-  
+      
   </body>
 </html>
