@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="http://v4-alpha.getbootstrap.com/favicon.ico">
 
-    <title>Viscacha Search</title>
+    <title>Viscacha</title>
 
     <!-- Bootstrap core CSS -->
     <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -30,7 +30,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">Viscacha search</a>
+          <a class="navbar-brand" href="/">Viscacha</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
@@ -69,8 +69,9 @@
       <div class="jumbotron">
         <div id="wrapper">
           <audio preload="none"></audio>
-          <ol id="audio_list">
-          </ol>
+          <hr>
+          <div class="list-group" id="search_results">
+          </div>
         </div>
       </div>
 
@@ -96,9 +97,9 @@
 
         $.post('/audios', function(data) {
           $.each(data, function (index, item) {
-            $('<li/>')
-              .append($('<a/>').prop('href', '#').attr('data-src', item.link).text(item.title))
-              .appendTo('#audio_list')
+            $('<a/>')
+              .prop('href', '#').attr('class', "list-group-item").attr('data-src', item.link).text(item.title)
+              .appendTo('#search_results')
           })
 
           initPlayer();
