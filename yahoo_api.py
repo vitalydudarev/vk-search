@@ -42,4 +42,4 @@ class YahooWeatherApi:
         res['condition'] = res_condition
         res['forecast'] = res_forecast
 
-        return {'has_error': has_error, 'result': res}
+        return json.dumps({'has_error': has_error, 'result': res})
