@@ -51,6 +51,9 @@
               </ul>
             </li>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li id="weather"><a href="#">Weather Minsk</a></li>
+          </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
@@ -109,6 +112,12 @@
 
 
     <script type="text/javascript">
+
+      $.getJSON("/weather", function(data) {
+        if (!data.has_error) {
+          $("#weather a" ).text('Minsk: ' + data.result.condition.temp);
+        }
+      });
 
       var waitDialog = $('#waitDialogModal');
 
