@@ -52,7 +52,7 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li id="weather"><a href="#">Weather Minsk</a></li>
+            <li id="weather" data="" data-toggle="popover" title="Weather Minsk" data-content="" data-placement="bottom"><a href="#">Weather Minsk</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -110,12 +110,29 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="static/js/ie10-viewport-bug-workaround.js"></script>
 
-
     <script type="text/javascript">
+
+      $("#weather").popover({ html: true, animation: true, trigger: "click" })
+        .on("show.bs.popover", function () {
+          var _this = this;
+          var data = $('#weather').attr('data');
+
+          var body = "";
+          var jsoned = JSON.parse(data);
+
+          $.each(jsoned.result.forecast, function (index, item) {
+            console.log(item);
+            body += item.day + ", " + item.date + ", " + item.high + " " + item.low + " " + item.text
+            body += "<br>"
+          });
+
+          $('#weather').attr('data-content', body)
+        });
 
       $.getJSON("/weather", function(data) {
         if (!data.has_error) {
-          $("#weather a" ).text('Minsk: ' + data.result.condition.temp);
+          $("#weather").attr('data', JSON.stringify(data))
+          $("#weather a" ).text('Minsk: ' + data.result.condition.temp + ' ' + data.result.condition.text);
         }
       });
 

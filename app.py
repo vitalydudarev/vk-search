@@ -1,12 +1,14 @@
-import vk_api
 import config
+from vk_api import VkApi
 from flask import Flask, render_template, request
-from yahoo_api import YahooWeatherApi
+from wrappers import YahooWeatherWrapper
+from storage import Storage
 
 app = Flask(__name__)
 config = config.load_config('config.json')
-api = vk_api.VkApi(config.access_token, config.proxy)
-weather_api = YahooWeatherApi()
+api = VkApi(config.access_token, config.proxy)
+wrapper = YahooWeatherWrapper(config.proxy)
+storage = Storage()
 
 @app.route("/")
 def hello():
@@ -29,7 +31,11 @@ def audios():
 
 @app.route("/weather")
 def weather():
-    return weather_api.get_forecast(834463)
+    weather = storage.get('weather')
+    if weather is None:
+        weather = wrapper.get_forecast(834463)
+        storage.add('weather', weather)
+    return weather
 
 if __name__ == "__main__":
     #app.run(host='0.0.0.0')

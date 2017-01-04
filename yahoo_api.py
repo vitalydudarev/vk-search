@@ -34,7 +34,7 @@ class YahooWeatherApi:
             res_condition = {'temp': condition['temp'], 'text': condition['text'], 'date': condition['date']}
 
             for item in forecast:
-                res_for = {'date': item['date'], 'high': item['high'], 'low': item['low'], 'text': item['text']}
+                res_for = {'day': item['day'], 'date': item['date'], 'high': item['high'], 'low': item['low'], 'text': item['text']}
                 res_forecast.append(res_for)
         else:
             has_error = True
