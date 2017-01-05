@@ -24,9 +24,6 @@
       .table {
         width: 400px;
       }
-      .td {
-        height: 100px;
-      }
     </style>
   </head>
 
@@ -141,7 +138,7 @@
             var td2 = $('<td/>').text(item.high + "° " + item.low + "°");
             var td3 = $('<td/>').text(item.text);
 
-            tbody.append($('<tr/>').css({"border": "1px solid black"}).append(td1, td2, td3));
+            tbody.append($('<tr/>').append(td1, td2, td3));
           });
 
           $('#weather').attr('data-content', table.html())
@@ -150,7 +147,7 @@
       $.getJSON("/weather", function(data) {
         if (!data.has_error) {
           $("#weather").attr('data', JSON.stringify(data))
-          $("#weather a" ).text('Minsk: ' + data.result.condition.temp + ' ' + data.result.condition.text);
+          $("#weather a" ).text('Minsk: ' + data.result.condition.temp + '° ' + data.result.condition.text);
         }
       });
 
