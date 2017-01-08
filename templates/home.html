@@ -10,17 +10,26 @@
     <meta name="author" content="">
     <link rel="icon" href="http://v4-alpha.getbootstrap.com/favicon.ico">
 
-    <title>Viscacha - VK Audios</title>
+    <title>Viscacha - Home</title>
 
     <!-- Bootstrap core CSS -->
     <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="static/css/navbar.css" rel="stylesheet">
     <link href="static/css/audio.css" rel="stylesheet" type="text/css">
     <link href="static/css/offcanvas.css" rel="stylesheet">
+    <style>
+      .popover{
+        max-width: 600px;
+      }
+      .table {
+        width: 400px;
+      }
+    </style>
   </head>
 
   <body>
 
+    <!-- Fixed navbar -->
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -34,9 +43,12 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
+            <li class="active"><a href="/">Home</a></li>
             <li><a href="/search">VK Search</a></li>
-            <li class="active"><a href="/audios">VK Audios</a></li>
+            <li><a href="/audios">VK Audios</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li id="weather" data="" data-toggle="popover" title="Weather Minsk" data-content="" data-placement="bottom"><a href="#">Weather Minsk</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -44,25 +56,10 @@
 
     <div class="container">
 
-      <div class="modal fade" id="waitDialogModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4>Loading...</h4>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading">Audios</div>
-          <div class="panel-body">
-            <div id="wrapper">
-              <audio preload="none"></audio>
-              <hr>
-              <div class="list-group" id="search_results"></div>
-            </div>
-          </div>
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>Weather in Minsk</h1>
+        <p id="weather_main"></p>
       </div>
 
     </div> <!-- /container -->
@@ -70,7 +67,7 @@
     <script src="static/js/jquery.min.js"></script>
     <script src="static/js/audiojs/audio.min.js"></script>
     <script src="static/js/player.js"></script>
-    
+
     <script src="static/js/tether.min.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
@@ -78,39 +75,43 @@
 
     <script type="text/javascript">
 
-      var waitDialog = $('#waitDialogModal1');
+      $("#weather").popover({ html: true, animation: true, trigger: "click", placement: 'auto' })
+        .on("show.bs.popover", function () {
+          var _this = this;
+          var data = $('#weather').attr('data');
 
-      loadAudios();
+          var body = "";
+          var jsoned = JSON.parse(data);
 
-      function loadAudios() {
-        showWaitDialog();
+          var tbody = $('<tbody/>');
+          var table = $('<div/>').attr('class', 'table-responsive')
+            .append($('<table/>').attr('class', 'table table-bordered')
+              .append(tbody));
 
-        $.post('/audios', function(data) {
-          $.each(data, function (index, item) {
-            $('<a/>')
-              .prop('href', '#').attr('class', "list-group-item").attr('data-src', item.link).text(item.title)
-              .appendTo('#search_results')
-          })
+          $.each(jsoned.result.forecast, function (index, item) {
+            var td1 = $('<td/>').text(item.day + ", " + item.date);
+            var td2 = $('<td/>').text(item.high + "° " + item.low + "°");
+            var td3 = $('<td/>').text(item.text);
 
-          initPlayer();
-          closeWaitDialog();
-        }, 'json');
-      }
+            tbody.append($('<tr/>').append(td1, td2, td3));
+          });
 
-      function showWaitDialog() {
-        waitDialog.modal('show');
-      }
+          $('#weather').attr('data-content', table.html())
+        });
 
-      function closeWaitDialog() {
-        waitDialog.modal('hide');
-      }
+      $.getJSON("/weather", function(data) {
+        if (!data.has_error) {
+          $("#weather").attr('data', JSON.stringify(data))
+          $("#weather a" ).text('Minsk: ' + data.result.condition.temp + '° ' + data.result.condition.text);
+          $("#weather_main").text(data.result.condition.temp + '° ' + data.result.condition.text)
+        }
+      });
 
     </script>
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    
-  
+      
   </body>
 </html>

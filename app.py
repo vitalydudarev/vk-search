@@ -11,8 +11,8 @@ wrapper = YahooWeatherWrapper(config.proxy)
 storage = Storage()
 
 @app.route("/")
-def hello():
-    return render_template("search.html")
+def home():
+    return render_template("home.html")
 
 @app.route("/search", methods=['POST', 'GET'])
 def search():
