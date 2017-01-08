@@ -27,7 +27,7 @@ def audios():
     if request.method == 'GET':
         return render_template("audios.html")
     if request.method == 'POST':
-        return api.get(config.user_id)
+        return api.get_audio(config.user_id)
 
 @app.route("/weather")
 def weather():

@@ -16,6 +16,8 @@ class VkApi:
 
         response = self.__get_response(uri)
         json_result = json.loads(response)
+        if 'error' in json_result:
+            return json.dumps([])
 
         result = []
 
@@ -25,13 +27,15 @@ class VkApi:
 
         return json.dumps(result, cls=AudioJsonEncoder)
 
-    def get(self, owner_id):
+    def get_audio(self, owner_id):
         method_name = "audio.get"
         uri = self.__uri + method_name + "?v=" + self.__api_version + "&access_token=" + self.__access_token + "&owner_id=" + str(owner_id)
         uri = uri.replace(' ', '%20')
 
         response = self.__get_response(uri)
         json_result = json.loads(response)
+        if 'error' in json_result:
+            return json.dumps([])
 
         result = []
 
