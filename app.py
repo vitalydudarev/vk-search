@@ -3,10 +3,12 @@ from vk_api import VkApi
 from flask import Flask, render_template, request
 from wrappers import YahooWeatherWrapper
 from storage import Storage
+from vk_audio import VkAudio
 
 app = Flask(__name__)
 config = config.load_config('config.json')
 api = VkApi(config.access_token, config.proxy)
+vk_audio = VkAudio("")
 wrapper = YahooWeatherWrapper(config.proxy)
 storage = Storage()
 
@@ -27,7 +29,11 @@ def audios():
     if request.method == 'GET':
         return render_template("audios.html")
     if request.method == 'POST':
-        return api.get_audio(config.user_id)
+        return vk_audio.get_audio_list(config.user_id)
+
+@app.route("/audio_info/<id>")
+def audio_info(id):
+    return vk_audio.get_audio_info([id])
 
 @app.route("/weather")
 def weather():

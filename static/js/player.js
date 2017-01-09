@@ -21,8 +21,13 @@
         $('#search_results a').click(function(e) {
           e.preventDefault();
           $(this).addClass('playing').siblings().removeClass('playing');
-          audio.load($(this).attr('data-src'));
-          audio.play();
+          var trackId = $(this).attr('track-id');
+
+          $.getJSON("/audio_info/" + trackId, function(data) {
+            $(this).attr('data-src', data.link);
+            audio.load($(this).attr('data-src'));
+            audio.play();
+          });
         });
         // Keyboard shortcuts
         $(document).keydown(function(e) {

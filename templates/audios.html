@@ -88,12 +88,21 @@
         $.post('/audios', function(data) {
           $.each(data, function (index, item) {
             $('<a/>')
-              .prop('href', '#').attr('class', "list-group-item").attr('data-src', item.link).text(item.title)
+              .prop('href', '#')
+                .attr('class', "list-group-item")
+                .attr('track-id', item.track_id)
+                .text(item.title)
               .appendTo('#search_results')
           })
 
-          initPlayer();
-          closeWaitDialog();
+          var firstElem = $('#search_results a').first();
+          var firstTrackId = firstElem.attr('track-id');
+
+          $.getJSON("/audio_info/" + firstTrackId, function(data) {
+            firstElem.attr('data-src', data.link);
+            initPlayer();
+            closeWaitDialog();
+          });
         }, 'json');
       }
 
