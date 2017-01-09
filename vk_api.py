@@ -3,7 +3,7 @@ import json
 
 
 class VkApi:
-    def __init__(self, access_token, proxy):
+    def __init__(self, access_token, proxy = {}):
         self.__uri = "https://api.vk.com/method/"
         self.__access_token = access_token
         self.__api_version = "5.60"
