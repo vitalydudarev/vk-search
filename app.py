@@ -8,7 +8,7 @@ from vk_audio import VkAudio
 app = Flask(__name__)
 config = config.load_config('config.json')
 api = VkApi(config.access_token, config.proxy)
-vk_audio = VkAudio("")
+vk_audio = VkAudio("", config.proxy)
 wrapper = YahooWeatherWrapper(config.proxy)
 storage = Storage()
 

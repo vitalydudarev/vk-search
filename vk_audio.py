@@ -6,9 +6,10 @@ from HTMLParser import HTMLParser
 
 class VkAudio:
     # the constructor takes cookie parameter in the format 'remixsid={id}'
-    def __init__(self, cookie):
+    def __init__(self, cookie, proxy = {}):
         self.__url = 'https://vk.com/al_audio.php'
         self.__cookie = cookie
+        self.__proxy = proxy
         self.__parser = HTMLParser()
 
     # returns an array of Audio objects
@@ -49,7 +50,7 @@ class VkAudio:
     def __get_response(self, headers, params):
         encoded_params = urllib.urlencode(params)
 
-        resp = requests.post(self.__url, data=encoded_params, headers=headers)
+        resp = requests.post(self.__url, data=encoded_params, headers=headers, proxies=self.__proxy)
 
         match = re.search('<!json>(.*)<!>', resp.content)
         j_str = unicode(match.group(1), 'cp1251')
