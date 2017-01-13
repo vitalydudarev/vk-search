@@ -1,6 +1,6 @@
 import urllib2
 import json
-from client import HttpClient
+from client import HttpClient, Response
 
 
 class YahooWeatherApi:
@@ -15,14 +15,19 @@ class YahooWeatherApi:
         query = urllib2.quote(query)
         uri = self.URI.replace('{query}', query)
 
-        response = self.__client.get_response(uri)
+        api_response = {'has_error': False, 'result': None}
 
-        j_resp = json.loads(response)
+        response = self.__client.get_response(uri)
+        if response.has_error:
+            api_response['has_error'] = True
+            api_response['error_description'] = "Connection error"
+            return json.dumps(api_response)
+
+        j_resp = json.loads(response.response_text)
 
         res = {}
         res_condition = {}
         res_forecast = []
-        has_error = False
 
         results = j_resp['query']['results']
 
@@ -37,9 +42,12 @@ class YahooWeatherApi:
                 res_for = {'day': item['day'], 'date': item['date'], 'high': item['high'], 'low': item['low'], 'text': item['text']}
                 res_forecast.append(res_for)
         else:
-            has_error = True
+            api_response['has_error'] = True
+            api_response['error_description'] = "Yahoo API error"
 
         res['condition'] = res_condition
         res['forecast'] = res_forecast
+        
+        api_response['result'] = res
 
-        return json.dumps({'has_error': has_error, 'result': res})
+        return json.dumps(api_response)
