@@ -1,9 +1,12 @@
 import config
+import datetime
+import utils
 from vk_api import VkApi
 from flask import Flask, render_template, request
-from wrappers import YahooWeatherWrapper
+from wrappers import YahooWeatherWrapper, NbrbRatesWrapper
 from storage import Storage
 from vk_audio import VkAudio
+from rates import NbrbRates
 
 app = Flask(__name__)
 config = config.load_config('config.json')
@@ -11,6 +14,7 @@ api = VkApi(config.access_token, config.proxy)
 vk_audio = VkAudio("", config.proxy)
 wrapper = YahooWeatherWrapper(config.proxy)
 storage = Storage()
+nbrb_rates = NbrbRatesWrapper()
 
 @app.route("/")
 def home():
@@ -30,6 +34,23 @@ def audios():
         return render_template("audios.html")
     if request.method == 'POST':
         return vk_audio.get_audio_list(config.user_id)
+
+@app.route("/rates")
+def rates():
+    return render_template("rates.html")
+
+@app.route("/get_r")
+def test():
+    currency = request.args.get('currency')
+    s_start = request.args.get('start')
+    s_end = request.args.get('end')
+    start = utils.string_to_date(s_start, "%Y-%m-%d")
+    end = utils.string_to_date(s_end, "%Y-%m-%d")
+    return nbrb_rates.get_rates(currency, start, end)
+
+@app.route("/get_rates/<ccy_id>")
+def get_rates(ccy_id):
+    return nbrb_rates.get_rates(ccy_id, datetime.date(2016, 12, 1), datetime.date(2017, 01, 14))
 
 @app.route("/audio_info/<id>")
 def audio_info(id):

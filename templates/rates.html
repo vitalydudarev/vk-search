@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)http://v4-alpha.getbootstrap.com/examples/navbar/ -->
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://v4-alpha.getbootstrap.com/favicon.ico">
+
+    <title>Viscacha - VK Audios</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/navbar.css" rel="stylesheet">
+    <link href="static/css/audio.css" rel="stylesheet" type="text/css">
+    <link href="static/css/offcanvas.css" rel="stylesheet">
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Viscacha</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/search">VK Search</a></li>
+            <li class="active"><a href="/audios">VK Audios</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="modal fade" id="waitDialogModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4>Loading...</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">Exchange rates</div>
+          <div class="panel-body">
+            <div style="width:90%;">
+              <canvas id="canvas"></canvas>
+            </div>
+          </div>
+      </div>
+
+    </div> <!-- /container -->
+
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/audiojs/audio.min.js"></script>
+    <script src="static/js/player.js"></script>
+    
+    <script src="static/js/tether.min.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="static/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="static/js/Chart.bundle.js"></script>
+
+    <script>
+      var chart;
+      var config = {}
+
+      $(function() {
+        init();
+        loadData();
+      });
+
+      function init() {
+        config = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "dataset - large pointHitRadius",
+                    data: [],
+                    fill: false,
+                    pointHitRadius: 20,
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'bottom',
+                },
+                hover: {
+                    mode: 'label'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true/*,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Month'
+                        }*/,
+                        type: 'time',
+                        unit: 'day',
+                        unitStepSize: 1,
+                        time: {
+                            displayFormats: {
+                                'day': 'MMM DD YYYY'
+                            }
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Value'
+                        }
+                    }]
+                },
+                title: {
+                    display: true,
+                    text: 'Chart.js Line Chart - Different point sizes'
+                }
+            }
+        };
+
+        $.each(config.data.datasets, function(i, dataset) {
+            var background = randomColor(0.5);
+            dataset.borderColor = background;
+            dataset.backgroundColor = background;
+            dataset.pointBorderColor = background;
+            dataset.pointBackgroundColor = background;
+            dataset.pointBorderWidth = 1;
+        });
+
+        var ctx = document.getElementById("canvas").getContext("2d");
+        chart = new Chart(ctx, config);        
+      }
+
+        var randomColorFactor = function() {
+            return Math.round(Math.random() * 255);
+        };
+        var randomColor = function(opacity) {
+            return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
+        };
+
+      function loadData() {
+        $.getJSON("/get_rates/USD", function(data) {
+          var keys = [];
+          var values = [];
+
+          $.each(data.result, function(key, val) {
+            keys.push(key);
+            values.push(val);
+          });
+
+          config.data.labels = keys;
+          config.data.datasets[0].data = values;
+          chart.update();
+        });
+      }
+
+      function replaceAll(str, search, replacement) {
+        return str.split(search).join(replacement);
+      };
+    </script>
+  </body>
+</html>
