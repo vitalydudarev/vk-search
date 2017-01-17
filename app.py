@@ -12,7 +12,7 @@ from rates import NbrbRates
 app = Flask(__name__)
 config = config.load_config('config.json')
 api = VkApi(config.access_token, config.proxy)
-vk_audio = VkAudio("", config.proxy)
+vk_audio = VkAudio("remixsid=282665e68916fcdba3b72f0a2e21e125fda6460e872a943a04cb5", config.proxy)
 wrapper = YahooWeatherWrapper(config.proxy)
 storage = Storage()
 nbrb_rates = NbrbRatesWrapper()
