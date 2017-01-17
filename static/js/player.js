@@ -23,11 +23,21 @@
           $(this).addClass('playing').siblings().removeClass('playing');
           var trackId = $(this).attr('track-id');
 
-          $.getJSON("/audio_info/" + trackId, function(data) {
-            $(this).attr('data-src', data.link);
-            audio.load($(this).attr('data-src'));
+          var attr = $(this).attr('data-src');
+
+          if (typeof attr === typeof undefined || attr === false) {
+            var elem = $(this);
+
+            $.getJSON("/audio_info/" + trackId, function(data) {
+              elem.attr('data-src', data.link);
+              audio.load(data.link);
+              audio.play();
+            });
+          }
+          else {
+            audio.load(attr);
             audio.play();
-          });
+          }
         });
         // Keyboard shortcuts
         $(document).keydown(function(e) {
