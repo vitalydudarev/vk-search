@@ -17,15 +17,15 @@ class YahooWeatherWrapper:
             forecast = self.__wrapper.get_forecast(location_id)
             j_forecast = json.loads(forecast)
             if j_forecast['has_error'] is False:
-                return forecast
+                break
 
         return forecast
 
 
 class NbrbRatesWrapper:
     def __init__(self, proxy = {}):
-        self.__wrapper = NbrbRates()
         self.__retry_count = 10
+        self.__wrapper = self.__get_instance()
 
     def get_rates(self, currency, from_date, to_date):
         rates = None
@@ -37,3 +37,13 @@ class NbrbRatesWrapper:
                 return rates
 
         return rates
+
+    def __get_instance(self):
+        wrapper = None
+
+        for i in range(0, self.__retry_count):
+            wrapper = NbrbRates()
+            if wrapper.init_failed is False:
+                break
+
+        return wrapper

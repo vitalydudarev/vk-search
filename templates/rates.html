@@ -43,7 +43,8 @@
           <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
             <li><a href="/search">VK Search</a></li>
-            <li class="active"><a href="/audios">VK Audios</a></li>
+            <li><a href="/audios">VK Audios</a></li>
+            <li class="active"><a href="/rates">Exchange Rates</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -64,8 +65,19 @@
       <div class="panel panel-default">
         <div class="panel-heading">Exchange rates</div>
           <div class="panel-body">
-            <div style="width:90%;">
-              <canvas id="canvas"></canvas>
+            <div class="row">
+              <div class="col-sm-10" style="padding-right:20px; border-right: 1px solid #ccc;">
+                <div>
+                  <canvas id="canvas"></canvas>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="btn-group" role="group" aria-label="...">
+                  <button type="button" class="btn btn-default" tenor="1M">1M</button>
+                  <button type="button" class="btn btn-default" tenor="3M">3M</button>
+                  <button type="button" class="btn btn-default" tenor="6M">6M</button>
+                </div>
+              </div>
             </div>
           </div>
       </div>
@@ -86,6 +98,23 @@
       var chart;
       var config = {}
 
+      $('.btn').on('click', function (e) {
+        var tenor = $(this).attr('tenor');
+        $.getJSON('/get_rates', { tenor: tenor, currency: 'USD' }, function(data) {
+          var keys = [];
+          var values = [];
+
+          $.each(data.result, function(key, val) {
+            keys.push(key);
+            values.push(val);
+          });
+
+          config.data.labels = keys;
+          config.data.datasets[0].data = values;
+          chart.update();
+        });
+      })
+
       $(function() {
         init();
         loadData();
@@ -99,11 +128,13 @@
                 datasets: [{
                     label: "dataset - large pointHitRadius",
                     data: [],
+                    lineTension: 0,
                     fill: false,
                     pointHitRadius: 20,
                 }]
             },
             options: {
+                animation: false,
                 responsive: true,
                 legend: {
                     position: 'bottom',
@@ -163,7 +194,7 @@
         };
 
       function loadData() {
-        $.getJSON("/get_rates/USD", function(data) {
+        $.getJSON("/get_rates", { tenor: '1m', currency: 'USD' }, function(data) {
           var keys = [];
           var values = [];
 

@@ -21,17 +21,17 @@ class NbrbRates:
     url_range = "http://www.nbrb.by/API/ExRates/Rates/Dynamics/{ccy_id}?startDate={from}&endDate={to}"
 
     def __init__(self):
+        self.init_failed = False
         self.__client = HttpClient(timeout=10)
-        self.__init_failed = False
         self.__cur_mapping = self.get_currencies()
         if len(self.__cur_mapping) == 0:
-            self.__init_failed = True
+            self.init_failed = True
             logging.debug(u'Initialization failed' )
 
     def get_rates(self, currency, from_date, to_date):
         api_response = {'has_error': False, 'result': None}
 
-        if self.__init_failed is True:
+        if self.init_failed is True:
             api_response['has_error'] = True
             api_response['error_description'] = "Connection error on initialization"
             return json.dumps(api_response)

@@ -1,6 +1,7 @@
 import config
 import datetime
 import utils
+import re
 from vk_api import VkApi
 from flask import Flask, render_template, request
 from wrappers import YahooWeatherWrapper, NbrbRatesWrapper
@@ -39,18 +40,30 @@ def audios():
 def rates():
     return render_template("rates.html")
 
-@app.route("/get_r")
-def test():
+@app.route("/get_rates")
+def get_rates():
     currency = request.args.get('currency')
-    s_start = request.args.get('start')
-    s_end = request.args.get('end')
-    start = utils.string_to_date(s_start, "%Y-%m-%d")
-    end = utils.string_to_date(s_end, "%Y-%m-%d")
-    return nbrb_rates.get_rates(currency, start, end)
-
-@app.route("/get_rates/<ccy_id>")
-def get_rates(ccy_id):
-    return nbrb_rates.get_rates(ccy_id, datetime.date(2016, 12, 1), datetime.date(2017, 01, 14))
+    tenor = request.args.get('tenor')
+    if tenor is not None:
+        match = re.search('(\\d+)[mM]', tenor)
+        if match is not None:
+            tenor_i = int(match.group(1))
+            key = 'rates-' + str(tenor_i)
+            res = storage.get(key)
+            if res is None:
+                end = datetime.date.today()
+                start = utils.month_delta(end, tenor_i * -1)
+                rates = nbrb_rates.get_rates(currency, start, end)
+                storage.add(key, rates)
+                return rates
+            else:
+                return res
+    else:
+        s_start = request.args.get('start')
+        s_end = request.args.get('end')
+        start = utils.string_to_date(s_start, "%Y-%m-%d")
+        end = utils.string_to_date(s_end, "%Y-%m-%d")
+        return nbrb_rates.get_rates(currency, start, end)
 
 @app.route("/audio_info/<id>")
 def audio_info(id):
