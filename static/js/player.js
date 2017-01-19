@@ -20,7 +20,9 @@
         // Load in a track on click
         $('#search_results a').click(function(e) {
           e.preventDefault();
-          $(this).addClass('playing').siblings().removeClass('playing');
+          $(this)
+            .addClass('playing').addClass('active').siblings()
+            .removeClass('playing').removeClass('active');
           var trackId = $(this).attr('track-id');
 
           var attr = $(this).attr('data-src');
@@ -29,9 +31,11 @@
             var elem = $(this);
 
             $.getJSON("/audio_info/" + trackId, function(data) {
-              elem.attr('data-src', data.link);
-              audio.load(data.link);
-              audio.play();
+              if (!data.has_errors) {
+                elem.attr('data-src', data.result.link);
+                audio.load(data.result.link);
+                audio.play();
+              }
             });
           }
           else {

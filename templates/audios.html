@@ -43,7 +43,7 @@
       </div>
     </nav>
 
-    <div class="container">
+    <div class="container" id="container">
 
       <div class="modal fade" id="waitDialogModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
@@ -55,7 +55,7 @@
         </div>
       </div>
 
-      <div class="panel panel-default">
+      <div class="panel panel-default" id="panel">
         <div class="panel-heading">Audios</div>
           <div class="panel-body">
             <div id="wrapper">
@@ -87,23 +87,32 @@
         showWaitDialog();
 
         $.post('/audios', function(data) {
-          $.each(data, function (index, item) {
-            $('<a/>')
-              .prop('href', '#')
-                .attr('class', "list-group-item")
-                .attr('track-id', item.track_id)
-                .text(item.title)
-              .appendTo('#search_results')
-          })
-
-          var firstElem = $('#search_results a').first();
-          var firstTrackId = firstElem.attr('track-id');
-
-          $.getJSON("/audio_info/" + firstTrackId, function(data) {
-            firstElem.attr('data-src', data.link);
-            initPlayer();
+          if (data.has_errors) {
             closeWaitDialog();
-          });
+            var errorDiv = $("<div class=\"alert alert-danger\" role=\"alert\"></div>");
+            errorDiv.text('Error loading data: ' + data.error_description);
+            $('#container').append(errorDiv);
+            
+          }
+          else {
+            $.each(data.result, function (index, item) {
+              $('<a/>')
+                .prop('href', '#')
+                  .attr('class', "list-group-item")
+                  .attr('track-id', item.track_id)
+                  .text(item.title)
+                .appendTo('#search_results')
+            })
+
+            var firstElem = $('#search_results a').first();
+            var firstTrackId = firstElem.attr('track-id');
+
+            $.getJSON("/audio_info/" + firstTrackId, function(data) {
+              firstElem.attr('data-src', data.result.link);
+              initPlayer();
+              closeWaitDialog();
+            });
+          }
         }, 'json');
       }
 
