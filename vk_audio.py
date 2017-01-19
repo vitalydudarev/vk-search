@@ -63,12 +63,37 @@ class VkAudio:
 
         return json.dumps(api_response)
 
+    def search(self, query):
+        api_response = {"has_errors": False, "result": None}
+        headers = {"cookie": self.__cookie}
+        params = {"act": "a_load_section", "al": 1, "claim": 0, "offset": 0, "search_history": 1, "search_lyrics": 0, 
+        "search_performer": 0, "search_q": query, "search_sort": 0, "type": "search"}
+
+        j_object = self.__get_response(headers, params)
+        if j_object is None:
+            api_response["has_errors"] = True
+            api_response["error_description"] = "Cookie has expired"
+            return json.dumps(api_response)
+
+        audio_list = j_object['list']
+
+        result = []
+
+        for item in audio_list:
+            track_id = item[1] + "_" + item[0]
+            title = self.__parser.unescape(item[4] + " - " + item[3])
+            result.append({"track_id": track_id, "title": title})
+
+        api_response['result'] = result
+
+        return json.dumps(api_response)
+
     def __get_response(self, headers, params):
         encoded_params = urllib.urlencode(params)
 
         resp = requests.post(self.__url, data=encoded_params, headers=headers, proxies=self.__proxy)
 
-        match = re.search('<!json>(.*)<!>', resp.content)
+        match = re.search('<!json>(.*?)(<!>)', resp.content)
         if match is None:
             return None
 

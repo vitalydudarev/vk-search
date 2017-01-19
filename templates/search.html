@@ -55,7 +55,7 @@
       </div>
     </nav>
 
-    <div class="container">
+    <div class="container" id="container">
 
       <div class="panel panel-default">
         <div class="panel-heading">Search Bar</div>
@@ -161,14 +161,31 @@
 
         var value = $('#search_input').val();
         $.post('/search', { value: value }, function(data) {
-          $.each(data, function (index, item) {
-            $('<a/>')
-              .prop('href', '#').attr('class', "list-group-item").attr('data-src', item.link).text(item.title)
-              .appendTo('#search_results')
-          })
-          
-          initPlayer();
-          closeWaitDialog();
+          if (data.has_errors) {
+            closeWaitDialog();
+            var errorDiv = $("<div class=\"alert alert-danger\" role=\"alert\"></div>");
+            errorDiv.text('Error loading data: ' + data.error_description);
+            $('#container').append(errorDiv);
+          }
+          else {
+            $.each(data.result, function (index, item) {
+              $('<a/>')
+                .prop('href', '#')
+                  .attr('class', "list-group-item")
+                  .attr('track-id', item.track_id)
+                  .text(item.title)
+                .appendTo('#search_results')
+            })
+            
+            var firstElem = $('#search_results a').first();
+            var firstTrackId = firstElem.attr('track-id');
+
+            $.getJSON("/audio_info/" + firstTrackId, function(data) {
+              firstElem.attr('data-src', data.result.link);
+              initPlayer();
+              closeWaitDialog();
+            });
+          }
         }, 'json');
       }
 
