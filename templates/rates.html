@@ -66,13 +66,15 @@
         <div class="panel-heading">Exchange rates</div>
           <div class="panel-body">
             <div class="row">
-              <div class="col-sm-10" style="padding-right:20px; border-right: 1px solid #ccc;">
+              <div class="col-sm-11" style="padding-right:20px; border-right: 1px solid #ccc;">
                 <div>
                   <canvas id="canvas"></canvas>
                 </div>
               </div>
-              <div class="col-sm-2">
-                <div class="btn-group" role="group" aria-label="...">
+              <div class="col-sm-1">
+                <div class="btn-group-vertical" role="group" aria-label="...">
+                  <button type="button" class="btn btn-primary" tenor="1W">1W</button>
+                  <button type="button" class="btn btn-default" tenor="2W">2W</button>
                   <button type="button" class="btn btn-default" tenor="1M">1M</button>
                   <button type="button" class="btn btn-default" tenor="3M">3M</button>
                   <button type="button" class="btn btn-default" tenor="6M">6M</button>
@@ -100,6 +102,10 @@
 
       $('.btn').on('click', function (e) {
         var tenor = $(this).attr('tenor');
+        $(this)
+            .removeClass('btn btn-default').addClass('btn btn-primary').siblings()
+            .removeClass('btn btn-primary').addClass('btn btn-default');
+
         $.getJSON('/get_rates', { tenor: tenor, currency: 'USD' }, function(data) {
           var keys = [];
           var values = [];
@@ -126,7 +132,7 @@
             data: {
                 labels: [],
                 datasets: [{
-                    label: "dataset - large pointHitRadius",
+                    label: "Rate",
                     data: [],
                     lineTension: 0,
                     fill: false,
@@ -137,6 +143,7 @@
                 animation: false,
                 responsive: true,
                 legend: {
+                    display: false,
                     position: 'bottom',
                 },
                 hover: {
@@ -144,11 +151,11 @@
                 },
                 scales: {
                     xAxes: [{
-                        display: true/*,
+                        display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: 'Month'
-                        }*/,
+                            labelString: 'Date'
+                        },
                         type: 'time',
                         unit: 'day',
                         unitStepSize: 1,
@@ -162,13 +169,9 @@
                         display: true,
                         scaleLabel: {
                             display: true,
-                            labelString: 'Value'
+                            labelString: 'Rate'
                         }
                     }]
-                },
-                title: {
-                    display: true,
-                    text: 'Chart.js Line Chart - Different point sizes'
                 }
             }
         };
@@ -194,7 +197,7 @@
         };
 
       function loadData() {
-        $.getJSON("/get_rates", { tenor: '1m', currency: 'USD' }, function(data) {
+        $.getJSON("/get_rates", { tenor: '1W', currency: 'USD' }, function(data) {
           var keys = [];
           var values = [];
 

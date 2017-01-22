@@ -45,14 +45,19 @@ def get_rates():
     currency = request.args.get('currency')
     tenor = request.args.get('tenor')
     if tenor is not None:
-        match = re.search('(\\d+)[mM]', tenor)
+        match = re.search('(\\d+)([mMwW])', tenor)
         if match is not None:
             tenor_i = int(match.group(1))
-            key = 'rates-' + str(tenor_i)
+            m_w = match.group(2)
+            key = 'rates-' + str(tenor_i) + m_w
             res = storage.get(key)
             if res is None:
                 end = datetime.date.today()
-                start = utils.month_delta(end, tenor_i * -1)
+                start = None
+                if m_w in ['m', 'M']:
+                    start = utils.month_delta(end, tenor_i * -1)
+                elif m_w in ['w', 'W']:
+                    start = end - datetime.timedelta(days=7 * tenor_i)
                 rates = nbrb_rates.get_rates(currency, start, end)
                 storage.add(key, rates)
                 return rates
