@@ -2,24 +2,26 @@ import config
 import datetime
 import utils
 import re
+import json
 from vk_api import VkApi
 from flask import Flask, render_template, request
-from wrappers import YahooWeatherWrapper, NbrbRatesWrapper
 from storage import Storage
 from vk_audio import VkAudio
-from rates import NbrbRates
+from facade import ServicesFacade
+        
 
 app = Flask(__name__)
 config = config.load_config('config.json')
-api = VkApi(config.access_token, config.proxy)
+vk_api = VkApi(config.access_token, config.proxy)
 vk_audio = VkAudio("", config.proxy)
-wrapper = YahooWeatherWrapper(config.proxy)
 storage = Storage()
-nbrb_rates = NbrbRatesWrapper()
+services_facade = ServicesFacade(storage, config.proxy)
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    cur_rate = storage.get('cur_rate')
+    j = json.loads(cur_rate)
+    return render_template("home.html", cur_rate=j['result'].values()[0])
 
 @app.route("/search", methods=['POST', 'GET'])
 def search():
@@ -58,7 +60,7 @@ def get_rates():
                     start = utils.month_delta(end, tenor_i * -1)
                 elif m_w in ['w', 'W']:
                     start = end - datetime.timedelta(days=7 * tenor_i)
-                rates = nbrb_rates.get_rates(currency, start, end)
+                rates = services_facade.rates().get_rates(currency, start, end)
                 storage.add(key, rates)
                 return rates
             else:
@@ -68,7 +70,7 @@ def get_rates():
         s_end = request.args.get('end')
         start = utils.string_to_date(s_start, "%Y-%m-%d")
         end = utils.string_to_date(s_end, "%Y-%m-%d")
-        return nbrb_rates.get_rates(currency, start, end)
+        return services_facade.rates().get_rates(currency, start, end)
 
 @app.route("/audio_info/<id>")
 def audio_info(id):
@@ -78,7 +80,7 @@ def audio_info(id):
 def weather():
     weather = storage.get('weather')
     if weather is None:
-        weather = wrapper.get_forecast(834463)
+        weather = services_facade.weather().get_forecast(834463)
         storage.add('weather', weather)
     return weather
 

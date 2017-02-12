@@ -27,6 +27,17 @@ class NbrbRatesWrapper:
         self.__retry_count = 10
         self.__wrapper = self.__get_instance()
 
+    def get_rate(self, currency, date):
+        rates = None
+
+        for i in range(0, self.__retry_count):
+            rates = self.__wrapper.get_rate(currency, date)
+            j_rates = json.loads(rates)
+            if j_rates['has_error'] is False:
+                return rates
+
+        return rates
+
     def get_rates(self, currency, from_date, to_date):
         rates = None
 

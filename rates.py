@@ -26,7 +26,10 @@ class NbrbRates:
         self.__cur_mapping = self.get_currencies()
         if len(self.__cur_mapping) == 0:
             self.init_failed = True
-            logging.debug(u'Initialization failed' )
+            logging.debug(u'Initialization failed')
+
+    def get_rate(self, currency, date):
+        return self.get_rates(currency, date, date)
 
     def get_rates(self, currency, from_date, to_date):
         api_response = {'has_error': False, 'result': None}
