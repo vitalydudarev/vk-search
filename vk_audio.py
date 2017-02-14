@@ -12,7 +12,6 @@ class VkAudio:
         self.__proxy = proxy
         self.__parser = HTMLParser()
 
-    # returns an array of Audio objects
     def get_audio_info(self, audio_ids):
         api_response = {"has_errors": False, "result": None}
         ids = ','.join(str(x) for x in audio_ids)
@@ -35,7 +34,7 @@ class VkAudio:
         if len(result) == 1:
             api_response['result'] = result[0]
         else:
-            api_response['result'] = audio_info
+            api_response['result'] = result
 
         return json.dumps(api_response)
 
