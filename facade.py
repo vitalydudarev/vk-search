@@ -4,12 +4,11 @@ import datetime
 
 
 class ServicesFacade:
-    def __init__(self, storage, proxy = {}):
+    def __init__(self, storage, client):
         print 'Initializing services'
-        self.__proxy = proxy
         self.__storage = storage
-        self.__rates_wrapper = NbrbRatesWrapper()
-        self.__weather_wrapper = YahooWeatherWrapper(proxy)
+        self.__rates_wrapper = NbrbRatesWrapper(client)
+        self.__weather_wrapper = YahooWeatherWrapper(client)
         weather = self.__weather_wrapper.get_forecast(834463)
         cur_rate = self.__rates_wrapper.get_rate('USD', datetime.date.today())
         storage.add('weather', weather)

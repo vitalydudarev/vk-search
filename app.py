@@ -8,14 +8,16 @@ from flask import Flask, render_template, request
 from storage import Storage
 from vk_audio import VkAudio
 from facade import ServicesFacade
+from client import HttpClient
         
 
 app = Flask(__name__)
 config = config.load_config('config.json')
-vk_api = VkApi(config.access_token, config.proxy)
-vk_audio = VkAudio("", config.proxy)
+client = HttpClient(config.proxy, 10)
+vk_api = VkApi(config.access_token, client)
+vk_audio = VkAudio("", client)
 storage = Storage()
-services_facade = ServicesFacade(storage, config.proxy)
+services_facade = ServicesFacade(storage, client)
 
 @app.route("/")
 def home():

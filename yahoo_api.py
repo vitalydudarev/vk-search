@@ -7,8 +7,8 @@ class YahooWeatherApi:
     URI = 'https://query.yahooapis.com/v1/public/yql?q={query}&format=json&diagnostics=true&callback='
     QUERY = 'select item from weather.forecast where woeid = {location_id} and u=\'c\''
 
-    def __init__(self, proxy = {}):
-        self.__client = HttpClient(proxy, 10)
+    def __init__(self, client):
+        self.__client = client
 
     def get_forecast(self, location_id):
         query = self.QUERY.replace('{location_id}', str(location_id))

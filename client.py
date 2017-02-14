@@ -1,4 +1,6 @@
 import urllib2
+import urllib
+import requests
 from socket import timeout
 
 
@@ -30,6 +32,11 @@ class HttpClient:
             has_error = True
 
         return Response(has_error, response_text)
+
+    def post(self, url, headers, params):
+        encoded_params = urllib.urlencode(params)
+
+        return requests.post(url, data=encoded_params, headers=headers, proxies=self.__proxy)
 
 
 class Response:

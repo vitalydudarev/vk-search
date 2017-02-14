@@ -1,15 +1,13 @@
-import requests
 import json
-import urllib
 import re
 from HTMLParser import HTMLParser
 
 class VkAudio:
     # the constructor takes cookie parameter in the format 'remixsid={id}'
-    def __init__(self, cookie, proxy = {}):
+    def __init__(self, cookie, client):
         self.__url = 'https://vk.com/al_audio.php'
         self.__cookie = cookie
-        self.__proxy = proxy
+        self.__client = client
         self.__parser = HTMLParser()
 
     def get_audio_info(self, audio_ids):
@@ -88,9 +86,7 @@ class VkAudio:
         return json.dumps(api_response)
 
     def __get_response(self, headers, params):
-        encoded_params = urllib.urlencode(params)
-
-        resp = requests.post(self.__url, data=encoded_params, headers=headers, proxies=self.__proxy)
+        resp = self.__client.post(self.__url, headers, params)
 
         match = re.search('<!json>(.*?)(<!>)', resp.content)
         if match is None:

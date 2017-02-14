@@ -1,21 +1,21 @@
-import urllib2
 import json
+from client import Response
 
 
 class VkApi:
-    def __init__(self, access_token, proxy = {}):
+    def __init__(self, access_token, client):
         self.__uri = "https://api.vk.com/method/"
         self.__access_token = access_token
         self.__api_version = "5.60"
-        self.__proxy = proxy
+        self.__client = client
 
     def search(self, q):
         method_name = "audio.search"
         uri = self.__uri + method_name + "?v=" + self.__api_version + "&access_token=" + self.__access_token + "&q=" + q
         uri = uri.replace(' ', '%20')
 
-        response = self.__get_response(uri)
-        json_result = json.loads(response)
+        response = self.__client.get_response(uri)
+        json_result = json.loads(response.response_text)
         if 'error' in json_result:
             return json.dumps([])
 
@@ -32,8 +32,8 @@ class VkApi:
         uri = self.__uri + method_name + "?v=" + self.__api_version + "&access_token=" + self.__access_token + "&owner_id=" + str(owner_id)
         uri = uri.replace(' ', '%20')
 
-        response = self.__get_response(uri)
-        json_result = json.loads(response)
+        response = self.__client.get_response(uri)
+        json_result = json.loads(response.response_text)
         if 'error' in json_result:
             return json.dumps([])
 
@@ -44,15 +44,6 @@ class VkApi:
             result.append(audio)
 
         return json.dumps(result, cls=AudioJsonEncoder)
-
-    def __get_response(self, url):
-        if len(self.__proxy) > 0:
-            proxy = urllib2.ProxyHandler(self.__proxy)
-            opener = urllib2.build_opener(proxy)
-            urllib2.install_opener(opener)
-
-        u = urllib2.urlopen(url)
-        return u.read()
 
 class Audio(object):
     def __init__(self, title, link):

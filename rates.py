@@ -20,9 +20,9 @@ class NbrbRates:
     url_currencies = "http://www.nbrb.by/API/ExRates/Currencies"
     url_range = "http://www.nbrb.by/API/ExRates/Rates/Dynamics/{ccy_id}?startDate={from}&endDate={to}"
 
-    def __init__(self):
+    def __init__(self, client):
         self.init_failed = False
-        self.__client = HttpClient(timeout=10)
+        self.__client = client
         self.__cur_mapping = self.get_currencies()
         if len(self.__cur_mapping) == 0:
             self.init_failed = True

@@ -6,8 +6,8 @@ import json
 # this wrapper is used to correctly load weather forecast
 # because sometimes Yahoo API returns an error without data
 class YahooWeatherWrapper:
-    def __init__(self, proxy = {}):
-        self.__wrapper = YahooWeatherApi(proxy)
+    def __init__(self, client):
+        self.__wrapper = YahooWeatherApi(client)
         self.__retry_count = 10
 
     def get_forecast(self, location_id):
@@ -23,7 +23,8 @@ class YahooWeatherWrapper:
 
 
 class NbrbRatesWrapper:
-    def __init__(self, proxy = {}):
+    def __init__(self, client):
+        self.__client = client
         self.__retry_count = 10
         self.__wrapper = self.__get_instance()
 
@@ -53,7 +54,7 @@ class NbrbRatesWrapper:
         wrapper = None
 
         for i in range(0, self.__retry_count):
-            wrapper = NbrbRates()
+            wrapper = NbrbRates(self.__client)
             if wrapper.init_failed is False:
                 break
 
