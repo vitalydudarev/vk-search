@@ -15,7 +15,7 @@ app = Flask(__name__)
 config = config.load_config('config.json')
 client = HttpClient(config.proxy, 10)
 vk_api = VkApi(config.access_token, client)
-vk_audio = VkAudio("", client)
+vk_audio = VkAudio(config.vk_cookie, client)
 storage = Storage()
 services_facade = ServicesFacade(storage, client)
 

@@ -6,6 +6,7 @@ class Config:
         self.access_token = ''
         self.proxy = []
         self.user_id = 0
+        self.vk_cookie = ''
 
 def get_item(data, key, default_value):
     if key in data:
@@ -21,5 +22,6 @@ def load_config(file_name):
         config.access_token = get_item(data, 'access_token', '')
         config.proxy = get_item(data, 'proxy', {})
         config.user_id = get_item(data, 'user_id', 0)
+        config.vk_cookie = get_item(data, 'vk_cookie', '')
 
         return config
