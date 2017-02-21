@@ -77,6 +77,7 @@
     <script src="static/js/jquery.min.js"></script>
     <script src="static/js/audiojs/audio.min.js"></script>
     <script src="static/js/player.js"></script>
+    <script src="static/js/vk.js"></script>
     
     <script src="static/js/tether.min.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
@@ -114,7 +115,9 @@
             var firstTrackId = firstElem.attr('track-id');
 
             $.getJSON("/audio_info/" + firstTrackId, function(data) {
-              firstElem.attr('data-src', data.result.link);
+              url = decodeLink(data.result.link);
+              firstElem.attr('data-src', url);
+
               initPlayer();
               closeWaitDialog();
             });

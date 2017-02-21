@@ -32,8 +32,9 @@
 
             $.getJSON("/audio_info/" + trackId, function(data) {
               if (!data.has_errors) {
-                elem.attr('data-src', data.result.link);
-                audio.load(data.result.link);
+                url = decodeLink(data.result.link);
+                elem.attr('data-src', url);
+                audio.load(url);
                 audio.play();
               }
             });
