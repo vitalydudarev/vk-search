@@ -50,16 +50,16 @@ function initPlayer() {
     var unicode = e.charCode ? e.charCode : e.keyCode;
        // right arrow
     if (unicode == 39) {
-      var next = $('li.playing').next();
+      var next = $('#search_results a.playing').next();
       if (!next.length) next = $('ol li').first();
       next.click();
       // back arrow
     } else if (unicode == 37) {
-      var prev = $('li.playing').prev();
+      var prev = $('#search_results a.playing').prev();
       if (!prev.length) prev = $('ol li').last();
       prev.click();
       // spacebar
-    } else if (unicode == 32) {
+    } else if (unicode == 80) {
       audio.playPause();
     }
   })
