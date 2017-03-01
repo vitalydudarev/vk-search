@@ -24,25 +24,25 @@ function loadAudio(element, audioControl) {
 
 function initPlayer() { 
   // Setup the player to autoplay the next track
-  var a = audiojs.createAll({
+  var audioElements = document.getElementsByTagName('audio');
+  var audioControl = audiojs.create(audioElements[0], {
     trackEnded: function() {
       var next = $('#search_results a.playing').next()
       if (!next.length) 
         next = $('#search_results a').first();
-      loadAudio(next, audio);
+      loadAudio(next, audioControl);
     }
   });
   
   // Load in the first track
-  var audio = a[0];
   var first = $('#search_results a').attr('data-src');
   $('#search_results a').first().addClass('playing');
-  audio.load(first);
+  audioControl.load(first);
 
   // Load in a track on click
   $('#search_results a').click(function(e) {
     e.preventDefault();
-    loadAudio($(this), audio);
+    loadAudio($(this), audioControl);
   });
 
   // Keyboard shortcuts
@@ -60,7 +60,7 @@ function initPlayer() {
       prev.click();
       // spacebar
     } else if (unicode == 80) {
-      audio.playPause();
+      audioControl.playPause();
     }
   })
 };
