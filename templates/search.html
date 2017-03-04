@@ -106,6 +106,7 @@
     <script src="static/js/audiojs/audio.min.js"></script>
     <script src="static/js/player.js"></script>
     <script src="static/js/vk.js"></script>
+    <script src="static/js/common.js"></script>
 
     <script src="static/js/tether.min.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
@@ -173,12 +174,14 @@
             $('#container').append(errorDiv);
           }
           else {
+            var trackInfoBar = "<span class=\"pull-right\"><button class=\"btn btn-xs btn-link\">{duration}</button></span>";
+
             $.each(data.result, function (index, item) {
               $('<a/>')
                 .prop('href', '#')
                   .attr('class', "list-group-item")
                   .attr('track-id', item.track_id)
-                  .text(item.title)
+                  .html(item.title + trackInfoBar.replace('{duration}', toTime(item.duration)))
                 .appendTo('#search_results')
             })
             

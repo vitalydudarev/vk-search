@@ -54,7 +54,8 @@ class VkAudio:
         for item in audio_list:
             track_id = item[1] + "_" + item[0]
             title = self.__parser.unescape(item[4] + " - " + item[3])
-            result.append({"track_id": track_id, "title": title})
+            duration = item[5]
+            result.append({"track_id": track_id, "title": title, "duration": duration})
 
         api_response['result'] = result
 
@@ -79,7 +80,8 @@ class VkAudio:
         for item in audio_list:
             track_id = item[1] + "_" + item[0]
             title = self.__parser.unescape(item[4] + " - " + item[3])
-            result.append({"track_id": track_id, "title": title})
+            duration = item[5]
+            result.append({"track_id": track_id, "title": title, "duration": duration})
 
         api_response['result'] = result
 
