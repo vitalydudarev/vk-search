@@ -24,7 +24,7 @@ class Scheduler():
         else:
             print("Timer already started or running, please wait if you're restarting.")
 
-    def cancel(self):
+    def stop(self):
         if self.__thread is not None:
             self.__should_continue = False # Just in case thread is running and cancel fails.
             self.__thread.cancel()
