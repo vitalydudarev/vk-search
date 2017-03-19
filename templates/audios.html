@@ -45,6 +45,10 @@
             <li class="active"><a href="/audios">VK Audios</a></li>
             <li><a href="/rates">Exchange Rates</a></li>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li id="weather" data-toggle="popover" title="Weather Forecast" data-content="" data-placement="bottom"><a href="#">Weather</a></li>
+          </ul>
+          <button class="btn btn-danger navbar-btn navbar-right">USD/BYN: {{ currency_rate }}</button>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
@@ -79,11 +83,16 @@
     <script src="static/js/player.js"></script>
     <script src="static/js/vk.js"></script>
     <script src="static/js/common.js"></script>
+    <script src="static/js/common_view.js"></script>
     
     <script src="static/js/tether.min.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="static/js/ie10-viewport-bug-workaround.js"></script>
+
+    <script type="text/javascript">
+      setView({{ forecast | tojson | safe }});
+    </script>
 
     <script type="text/javascript">
 

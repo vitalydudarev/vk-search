@@ -53,8 +53,9 @@
             <li><a href="/rates">Exchange Rates</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li id="weather" data="" data-toggle="popover" title="Weather Minsk" data-content="" data-placement="bottom"><a href="#">Weather Minsk</a></li>
+            <li id="weather" data-toggle="popover" title="Weather Forecast" data-content="" data-placement="bottom"><a href="#">Weather</a></li>
           </ul>
+          <button class="btn btn-danger navbar-btn navbar-right">USD/BYN: {{ currency_rate }}</button>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
@@ -107,6 +108,7 @@
     <script src="static/js/player.js"></script>
     <script src="static/js/vk.js"></script>
     <script src="static/js/common.js"></script>
+    <script src="static/js/common_view.js"></script>
 
     <script src="static/js/tether.min.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
@@ -114,37 +116,10 @@
     <script src="static/js/ie10-viewport-bug-workaround.js"></script>
 
     <script type="text/javascript">
+      setView({{ forecast | tojson | safe }});
+    </script>
 
-      $("#weather").popover({ html: true, animation: true, trigger: "click", placement: 'auto' })
-        .on("show.bs.popover", function () {
-          var _this = this;
-          var data = $('#weather').attr('data');
-
-          var body = "";
-          var jsoned = JSON.parse(data);
-
-          var tbody = $('<tbody/>');
-          var table = $('<div/>').attr('class', 'table-responsive')
-            .append($('<table/>').attr('class', 'table table-bordered')
-              .append(tbody));
-
-          $.each(jsoned.result.forecast, function (index, item) {
-            var td1 = $('<td/>').text(item.day + ", " + item.date);
-            var td2 = $('<td/>').text(item.high + "° " + item.low + "°");
-            var td3 = $('<td/>').text(item.text);
-
-            tbody.append($('<tr/>').append(td1, td2, td3));
-          });
-
-          $('#weather').attr('data-content', table.html())
-        });
-
-      $.getJSON("/weather", function(data) {
-        if (!data.has_error) {
-          $("#weather").attr('data', JSON.stringify(data))
-          $("#weather a" ).text('Minsk: ' + data.result.condition.temp + '° ' + data.result.condition.text);
-        }
-      });
+    <script type="text/javascript">
 
       var waitDialog = $('#waitDialogModal');
 
