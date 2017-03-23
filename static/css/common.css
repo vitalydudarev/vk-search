@@ -1,0 +1,11 @@
+.popover{
+  max-width: 600px;
+}
+
+.table {
+  width: 400px;
+}
+
+body {
+  font-family: 'Roboto', serif;
+}
