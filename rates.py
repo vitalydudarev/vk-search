@@ -1,17 +1,16 @@
-import urllib2
-from socket import timeout
 import json
 import datetime
 import collections
 import logging
 import utils
-from client import HttpClient, Response
+from api import ApiResponse
 
 
 class Currency:
     def __init__(self, id, abbreviation):
-        self.id = id;
-        self.abbreviation = abbreviation;
+        self.id = id
+        self.abbreviation = abbreviation
+
 
 class NbrbRates:
     DATE_FORMAT = "%Y-%m-%d"
@@ -32,44 +31,34 @@ class NbrbRates:
         return self.get_rates(currency, date, date)
 
     def get_rates(self, currency, from_date, to_date):
-        api_response = {'has_error': False, 'result': None}
-
         if self.init_failed is True:
-            api_response['has_error'] = True
-            api_response['error_description'] = "Connection error on initialization"
-            return json.dumps(api_response)
+            return ApiResponse(has_error=True, error_description='Connection error on initialization').to_json()
 
         if currency not in self.__cur_mapping:
-            api_response['has_error'] = True
-            api_response['error_description'] = "Unsupported/unknown currency"
-            return json.dumps(api_response)
+            return ApiResponse(has_error=True, error_description='Unsupported/unknown currency').to_json()
 
         currency_id = self.__cur_mapping[currency]
 
-        uri = self.url_range\
-        .replace("{ccy_id}", str(currency_id))\
-        .replace("{from}", utils.date_to_string(from_date, self.DATE_FORMAT))\
-        .replace("{to}", utils.date_to_string(to_date, self.DATE_FORMAT))
+        uri = self.url_range \
+            .replace("{ccy_id}", str(currency_id)) \
+            .replace("{from}", utils.date_to_string(from_date, self.DATE_FORMAT)) \
+            .replace("{to}", utils.date_to_string(to_date, self.DATE_FORMAT))
 
         response = self.__client.get_response(uri)
         if response.has_error:
-            api_response['has_error'] = True
-            api_response['error_description'] = "Connection error"
-            return json.dumps(api_response)
+            return ApiResponse(has_error=True, error_description='Connection error').to_json()
 
         j_resp = json.loads(response.response_text)
 
         rates = {}
 
         for item in j_resp:
-        	date = utils.string_to_date(item['Date'], self.ISO_DATE_FORMAT)
-        	str_date = utils.date_to_string(date, self.DATE_FORMAT)
-        	rate = item['Cur_OfficialRate']
-        	rates[str_date] = rate
+            date = utils.string_to_date(item['Date'], self.ISO_DATE_FORMAT)
+            str_date = utils.date_to_string(date, self.DATE_FORMAT)
+            rate = item['Cur_OfficialRate']
+            rates[str_date] = rate
 
-        api_response['result'] = collections.OrderedDict(sorted(rates.items()))
-
-        return json.dumps(api_response)
+        return ApiResponse(result=collections.OrderedDict(sorted(rates.items()))).to_json()
 
     def get_currencies(self):
         response = self.__client.get_response(self.url_currencies)
@@ -87,7 +76,7 @@ class NbrbRates:
     def __date_to_string(self, date):
         return date.strftime(self.DATE_FORMAT)
 
-    def __string_to_date(self, str, format = None):
-    	if format is None:
-    		format = self.DATE_FORMAT
+    def __string_to_date(self, str, format=None):
+        if format is None:
+            format = self.DATE_FORMAT
         return datetime.datetime.strptime(str, format)

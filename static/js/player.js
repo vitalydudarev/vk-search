@@ -8,7 +8,7 @@ function loadAudio(element, audioControl) {
 
   if (typeof attr === typeof undefined || attr === false) {
     $.getJSON("/audio_info/" + trackId, function(data) {
-      if (!data.has_errors) {
+      if (!data.has_error) {
         url = decodeLink(data.result.link);
         element.attr('data-src', url);
         audioControl.load(url);

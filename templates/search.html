@@ -132,7 +132,7 @@
 
         var value = $('#search_input').val();
         $.post('/search', { value: value }, function(data) {
-          if (data.has_errors) {
+          if (data.has_error) {
             closeWaitDialog();
             var errorDiv = $("<div class=\"alert alert-danger\" role=\"alert\"></div>");
             errorDiv.text('Error loading data: ' + data.error_description);

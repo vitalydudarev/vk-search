@@ -1,6 +1,8 @@
 import json
 import re
 from HTMLParser import HTMLParser
+from api import ApiResponse
+
 
 class VkAudio:
     # the constructor takes cookie parameter in the format 'remixsid={id}'
@@ -11,16 +13,13 @@ class VkAudio:
         self.__parser = HTMLParser()
 
     def get_audio_info(self, audio_ids):
-        api_response = {"has_errors": False, "result": None}
         ids = ','.join(str(x) for x in audio_ids)
         headers = {"cookie": self.__cookie}
         params = {"act": "reload_audio", "al": 1, "ids": ids}
 
         audio_info = self.__get_response(headers, params)
         if audio_info is None:
-            api_response["has_errors"] = True
-            api_response["error_description"] = "Cookie has expired"
-            return json.dumps(api_response)
+            return ApiResponse(has_error=True, error_description='Cookie has expired').to_json()
 
         result = []
 
@@ -30,22 +29,19 @@ class VkAudio:
             result.append({"track_id": track_id, "link": link})
 
         if len(result) == 1:
-            api_response['result'] = result[0]
+            res = result[0]
         else:
-            api_response['result'] = result
+            res = result
 
-        return json.dumps(api_response)
+        return ApiResponse(result=res)
 
     def get_audio_list(self, owner_id):
-        api_response = {"has_errors": False, "result": None}
         headers = {"cookie": self.__cookie}
         params = {"act": "load_silent", "al": 1, "album_id": -2, "band": False, "owner_id": owner_id}
 
         j_object = self.__get_response(headers, params)
         if j_object is None:
-            api_response["has_errors"] = True
-            api_response["error_description"] = "Cookie has expired"
-            return json.dumps(api_response)
+            return ApiResponse(has_error=True, error_description='Cookie has expired').to_json()
 
         audio_list = j_object['list']
 
@@ -57,21 +53,16 @@ class VkAudio:
             duration = item[5]
             result.append({"track_id": track_id, "title": title, "duration": duration})
 
-        api_response['result'] = result
-
-        return json.dumps(api_response)
+        return ApiResponse(result=result)
 
     def search(self, query):
-        api_response = {"has_errors": False, "result": None}
         headers = {"cookie": self.__cookie}
-        params = {"act": "a_load_section", "al": 1, "claim": 0, "offset": 0, "search_history": 1, "search_lyrics": 0, 
-        "search_performer": 0, "search_q": query, "search_sort": 0, "type": "search"}
+        params = {"act": "a_load_section", "al": 1, "claim": 0, "offset": 0, "search_history": 1, "search_lyrics": 0,
+                  "search_performer": 0, "search_q": query, "search_sort": 0, "type": "search"}
 
         j_object = self.__get_response(headers, params)
         if j_object is None:
-            api_response["has_errors"] = True
-            api_response["error_description"] = "Cookie has expired"
-            return json.dumps(api_response)
+            return ApiResponse(has_error=True, error_description='Cookie has expired').to_json()
 
         audio_list = j_object['list']
 
@@ -83,9 +74,7 @@ class VkAudio:
             duration = item[5]
             result.append({"track_id": track_id, "title": title, "duration": duration})
 
-        api_response['result'] = result
-
-        return json.dumps(api_response)
+        return ApiResponse(result=result)
 
     def __get_response(self, headers, params):
         resp = self.__client.post(self.__url, headers, params)
