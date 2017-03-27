@@ -5,7 +5,7 @@ from socket import timeout
 
 
 class HttpClient:
-    def __init__(self, proxy = {}, timeout = None):
+    def __init__(self, proxy={}, timeout=None):
         self.__proxy = proxy
         self.__timeout = timeout
 
@@ -19,16 +19,17 @@ class HttpClient:
         response_text = ""
 
         try:
-            u = None
             if self.__timeout is None:
                 u = urllib2.urlopen(url)
             else:
                 u = urllib2.urlopen(url, timeout=self.__timeout)
             response_text = u.read()
 
-        except (urllib2.HTTPError, urllib2.URLError) as error:
+        except (urllib2.HTTPError, urllib2.URLError):
             has_error = True
         except timeout:
+            has_error = True
+        except requests.exceptions.RequestException:
             has_error = True
 
         return Response(has_error, response_text)
