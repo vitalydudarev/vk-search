@@ -31,7 +31,7 @@ class Facade:
     def get_current_rate(self):
         cur_rate = self.__storage.get('cur_rate')
         res = json.loads(cur_rate)
-        return res['result'].values()[0]
+        return res['result']
 
     def get_current_weather(self):
         weather = self.__storage.get('weather')
