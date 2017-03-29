@@ -52,7 +52,7 @@ class Facade:
                         start = utils.month_delta(end, tenor_i * -1)
                     elif m_w in ['w', 'W']:
                         start = end - datetime.timedelta(days=7 * tenor_i)
-                    rates = self.__rates_service.get_rates(currency, start, end)
+                    rates = self.__rates_service.get_rates_dynamics(currency, start, end)
                     self.__storage.add(key, rates)
                     return rates
                 else:
@@ -60,7 +60,7 @@ class Facade:
         else:
             s_start = utils.string_to_date(start, "%Y-%m-%d")
             s_end = utils.string_to_date(end, "%Y-%m-%d")
-            return self.__rates_service.get_rates(currency, s_start, s_end)
+            return self.__rates_service.get_rates_dynamics(currency, s_start, s_end)
 
     def vk_search(self, query):
         return self.__vk_audio.search(query)
@@ -72,7 +72,7 @@ class Facade:
         return self.__vk_audio.get_audio_info(id)
 
     def __update_rates(self):
-        cur_rate = self.__rates_service.get_rate('USD', datetime.date.today())
+        cur_rate = self.__rates_service.get_today_rate('USD')
         logging.info(u'Updated rates')
         self.__storage.add('cur_rate', cur_rate)
 
