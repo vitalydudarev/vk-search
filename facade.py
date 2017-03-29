@@ -43,7 +43,7 @@ class Facade:
             if match is not None:
                 tenor_i = int(match.group(1))
                 m_w = match.group(2)
-                key = 'rates-' + str(tenor_i) + m_w
+                key = 'rates-' + str(datetime.date.today()) + str(tenor_i) + m_w
                 res = self.__storage.get(key)
                 if res is None:
                     end = datetime.date.today()
