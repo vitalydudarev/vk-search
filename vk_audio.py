@@ -24,7 +24,7 @@ class VkAudio:
         result = []
 
         for item in audio_info:
-            track_id = item[1] + "_" + item[0]
+            track_id = str(item[1]) + "_" + str(item[0])
             link = item[2]
             result.append({"track_id": track_id, "link": link})
 
@@ -33,7 +33,7 @@ class VkAudio:
         else:
             res = result
 
-        return ApiResponse(result=res)
+        return ApiResponse(result=res).to_json()
 
     def get_audio_list(self, owner_id):
         headers = {"cookie": self.__cookie}
@@ -48,12 +48,12 @@ class VkAudio:
         result = []
 
         for item in audio_list:
-            track_id = item[1] + "_" + item[0]
+            track_id = str(item[1]) + "_" + str(item[0])
             title = self.__parser.unescape(item[4] + " - " + item[3])
             duration = item[5]
             result.append({"track_id": track_id, "title": title, "duration": duration})
 
-        return ApiResponse(result=result)
+        return ApiResponse(result=result).to_json()
 
     def search(self, query):
         headers = {"cookie": self.__cookie}
@@ -69,12 +69,12 @@ class VkAudio:
         result = []
 
         for item in audio_list:
-            track_id = item[1] + "_" + item[0]
+            track_id = str(item[1]) + "_" + str(item[0])
             title = self.__parser.unescape(item[4] + " - " + item[3])
             duration = item[5]
             result.append({"track_id": track_id, "title": title, "duration": duration})
 
-        return ApiResponse(result=result)
+        return ApiResponse(result=result).to_json()
 
     def __get_response(self, headers, params):
         resp = self.__client.post(self.__url, headers, params)
@@ -83,6 +83,6 @@ class VkAudio:
         if match is None:
             return None
 
-        j_str = unicode(match.group(1), 'cp1251')
+        j_str = match.group(1).decode('cp1251').encode('utf8')
 
         return json.loads(j_str)
