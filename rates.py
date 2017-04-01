@@ -48,7 +48,7 @@ class NbrbRates:
     def get_rates_dynamics(self, currency, from_date, to_date):
         if self.__cur_mapping is None:
             self.__cur_mapping = self.get_currencies()
-            if len(self.__cur_mapping) == 0:
+            if self.__cur_mapping is None or len(self.__cur_mapping) == 0:
                 logging.debug(u'Initialization failed')
                 return ApiResponse(has_error=True, error_description='Connection error on initialization').to_json()
 
