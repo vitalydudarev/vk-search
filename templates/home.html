@@ -54,7 +54,7 @@
 
       <!-- Main component for a primary marketing message or call to action -->
       <div class="jumbotron">
-        <h1>Weather in Minsk</h1>
+        <h2>{{ date_formatted }}</h2>
         <p id="weather_main"></p>
       </div>
 
@@ -72,7 +72,7 @@
 
     <script type="text/javascript">
       setView({{ forecast | tojson | safe }});
-      $("#weather_main").text($("#weather a" ).text());
+      $("#weather_main").text('Minsk, ' + $("#weather a").text());
     </script>
 
     <!-- Bootstrap core JavaScript

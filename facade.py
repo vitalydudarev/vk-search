@@ -71,6 +71,9 @@ class Facade:
     def vk_get_audio_info(self, id):
         return self.__vk_audio.get_audio_info(id)
 
+    def get_date_formatted(self):
+        return datetime.date.today().strftime("%A, %d %B %Y")
+
     def __update_rates(self):
         cur_rate = self.__rates_service.get_today_rate('USD')
         logging.info(u'Updated rates')

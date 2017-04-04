@@ -10,7 +10,7 @@ facade = Facade(config)
 @app.route("/")
 def home():
     data = __get_template_data()
-    return render_template("home.html", currency_rate = data['currency_rate'], forecast = data['forecast'])
+    return render_template("home.html", currency_rate = data['currency_rate'], forecast = data['forecast'], date_formatted=facade.get_date_formatted())
 
 
 @app.route("/search", methods=['POST', 'GET'])
