@@ -66,7 +66,7 @@ class Facade:
         return self.__vk_audio.search(query)
 
     def vk_get_audio_list(self, user_id):
-        return self.__vk_audio.get_audio_list(user_id)
+        return self.__vk_audio.get_playlist(user_id)
 
     def vk_get_audio_info(self, id):
         return self.__vk_audio.get_audio_info(id)

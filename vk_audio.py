@@ -35,6 +35,27 @@ class VkAudio:
 
         return ApiResponse(result=res).to_json()
 
+    # returns a playlist of the size of 100 records
+    def get_playlist(self, owner_id, offset=0):
+        headers = {'cookie': self.__cookie}
+        params = {'act': 'load_section', 'al': 1, 'claim': 0, 'offset': offset, 'owner_id': owner_id, 'playlist_id': -1, 'type': 'playlist'}
+
+        j_object = self.__get_response(headers, params)
+        if j_object is None:
+            return ApiResponse(has_error=True, error_description='Cookie has expired').to_json()
+
+        audio_list = j_object['list']
+
+        result = []
+
+        for item in audio_list:
+            track_id = str(item[1]) + "_" + str(item[0])
+            title = self.__parser.unescape(item[4] + " - " + item[3])
+            duration = item[5]
+            result.append({"track_id": track_id, "title": title, "duration": duration})
+
+        return ApiResponse(result=result).to_json()
+
     def get_audio_list(self, owner_id):
         headers = {"cookie": self.__cookie}
         params = {"act": "load_silent", "al": 1, "album_id": -2, "band": False, "owner_id": owner_id}
@@ -57,8 +78,7 @@ class VkAudio:
 
     def search(self, query):
         headers = {"cookie": self.__cookie}
-        params = {"act": "a_load_section", "al": 1, "claim": 0, "offset": 0, "search_history": 1, "search_lyrics": 0,
-                  "search_performer": 0, "search_q": query, "search_sort": 0, "type": "search"}
+        params = {"act": "load_section", "al": 1, "claim": 0, "offset": 0, "search_history": 0, "search_q": query, "type": "search"}
 
         j_object = self.__get_response(headers, params)
         if j_object is None:
