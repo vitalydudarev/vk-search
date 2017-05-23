@@ -138,6 +138,12 @@
             errorDiv.text('Error loading data: ' + data.error_description);
             $('#container').append(errorDiv);
           }
+          else if (data.result.length == 0) {
+            closeWaitDialog();
+            var errorDiv = $("<div class=\"alert alert-danger\" role=\"alert\"></div>");
+            errorDiv.text('Nothing found.');
+            $('#container').append(errorDiv);
+          }
           else {
             var trackInfoBar = "<span class=\"pull-right\"><button class=\"btn btn-xs btn-link\">{duration}</button></span>";
 
