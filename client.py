@@ -35,7 +35,7 @@ class HttpClient:
         return Response(has_error, response_text)
 
     def post(self, url, headers, params):
-        encoded_params = urllib.urlencode(params)
+        encoded_params = urllib.urlencode(params, 'utf-8')
 
         return requests.post(url, data=encoded_params, headers=headers, proxies=self.__proxy)
 
