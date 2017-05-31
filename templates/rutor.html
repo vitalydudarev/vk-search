@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)http://v4-alpha.getbootstrap.com/examples/navbar/ -->
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://v4-alpha.getbootstrap.com/favicon.ico">
+
+    <title>Viscacha - Rutor</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/navbar.css" rel="stylesheet">
+    <link href="static/css/audio.css" rel="stylesheet" type="text/css">
+    <link href="static/css/offcanvas.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="static/css/common.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Viscacha</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/search">VK Search</a></li>
+            <li><a href="/audios">VK Audios</a></li>
+            <li><a href="/rates">Exchange Rates</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><button class="btn btn-link navbar-btn" style="text-decoration: none; color: #fff">USD/BYN: {{ currency_rate }}</button></li>
+            <li><button class="btn btn-link navbar-btn" style="text-decoration: none; color: #fff" id="weather" data-toggle="popover" data-trigger="hover" title="Weather Forecast" data-content="" data-placement="bottom"></button></li>
+            <li><button class="btn btn-link navbar-btn" style="text-decoration: none; color: #fff"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container" id="container">
+
+      <table class="table table-bordered table-striped" id="rutor_table" style="width: auto;"">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Size</th>
+            <th>Added</th>
+          </tr>
+        </thead>
+      </table>
+
+      <div class="modal fade" id="waitDialogModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4>Loading...</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/audiojs/audio.min.js"></script>
+    <script src="static/js/player.js"></script>
+    <script src="static/js/vk.js"></script>
+    <script src="static/js/common.js"></script>
+    <script src="static/js/common_view.js"></script>
+
+    <script src="static/js/tether.min.js"></script>
+    <script src="static/bootstrap/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="static/js/ie10-viewport-bug-workaround.js"></script>
+
+    <script type="text/javascript">
+      setView({{ forecast | tojson | safe }});
+    </script>
+
+    <script type="text/javascript">
+
+    $(document).ready(function() {
+  var win = $(window);
+
+  // Each time the user scrolls
+  win.scroll(function() {
+    // End of the document reached?
+    if ($(document).height() - win.height() == win.scrollTop()) {
+      //$('#loading').show();
+
+      $.ajax({
+        url: 'get_rutor_data',
+        dataType: 'html',
+        success: function(data) {
+
+          var jsoned = JSON.parse(data)
+
+          var tbody = $('<tbody/>');
+          var table = $('#rutor_table');
+
+          $.each(jsoned, function (index, item) {
+            var td1 = $('<td/>').text(item.torrent_id);
+            var td2 = $('<td/>').text(item.title);
+            var td3 = $('<td/>').text(item.category);
+            var td4 = $('<td/>').text(item.size);
+            var td5 = $('<td/>').text(item.added);
+
+            tbody.append($('<tr/>').append(td1, td2, td3, td4, td5));
+          });
+
+          table.append(tbody);
+          //$('#posts').append(html);
+          //$('#loading').hide();
+        }
+      });
+    }
+  });
+});
+
+      var waitDialog = $('#waitDialogModal');
+      $('#rutor_table').hide();
+
+      loadData();
+
+      function loadData() {
+        showWaitDialog();
+
+        $.get("/get_rutor_data", function(data) {
+
+          var jsoned = JSON.parse(data)
+
+          var tbody = $('<tbody/>');
+          var table = $('#rutor_table');
+
+          $.each(jsoned, function (index, item) {
+            var td1 = $('<td/>').text(item.torrent_id);
+            var td2 = $('<td/>').text(item.title);
+            var td3 = $('<td/>').text(item.category);
+            var td4 = $('<td/>').text(item.size);
+            var td5 = $('<td/>').text(item.added);
+
+            tbody.append($('<tr/>').append(td1, td2, td3, td4, td5));
+          });
+
+          table.append(tbody);
+          $('#rutor_table').show();
+          
+          closeWaitDialog();
+        });
+      }
+
+      function showWaitDialog() {
+        waitDialog.modal('show');
+      }
+
+      function closeWaitDialog() {
+        waitDialog.modal('hide');
+      }
+
+    </script>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+      
+  </body>
+</html>

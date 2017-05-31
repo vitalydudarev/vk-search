@@ -16,6 +16,10 @@ from json import JSONEncoder
 logging.basicConfig(level = logging.DEBUG, format = "%(asctime)s;%(levelname)s;%(message)s")
 
 
+class MyEncoder(json.JSONEncoder):
+    def default(self, o):
+        return o.__dict__
+
 class Facade:
     def __init__(self, config):
         self.__storage = Storage()
@@ -79,6 +83,12 @@ class Facade:
 
     def get_place_woeid(self, query):
         return self.__geo_service.get_places(query).to_json()
+
+    def get_rutor_data(self):
+        with open('dump.txt', 'r') as file:
+            aaa = json.loads(file.read())
+            bbb = aaa[:10]
+            return json.dumps(bbb, cls=MyEncoder)
 
     def __update_rates(self):
         cur_rate = self.__rates_service.get_today_rate('USD')
