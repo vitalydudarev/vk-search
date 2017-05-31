@@ -55,6 +55,15 @@ def weather():
     return facade.get_current_weather()
 
 
+@app.route("/search_place", methods=['POST', 'GET'])
+def search_place():
+    if request.method == 'GET':
+        data = __get_template_data()
+        return render_template("search_place.html", currency_rate = data['currency_rate'], forecast = data['forecast'])
+    if request.method == 'POST':
+        query = request.form['query']
+        return facade.get_place_woeid(query)
+
 def __get_template_data():
     rate = facade.get_current_rate()
     forecast = facade.get_current_weather()

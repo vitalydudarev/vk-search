@@ -2,6 +2,7 @@ import re
 from client import HttpClient
 from vk_audio import VkAudio
 from wrappers import YahooWeatherWrapper, NbrbRatesWrapper
+from yahoo_api import YahooGeoApi
 from storage import Storage
 from scheduler import Scheduler
 import datetime
@@ -9,6 +10,7 @@ import json
 import utils
 import threading
 import logging
+from json import JSONEncoder
 
 
 logging.basicConfig(level = logging.DEBUG, format = "%(asctime)s;%(levelname)s;%(message)s")
@@ -21,6 +23,7 @@ class Facade:
         self.__vk_audio = VkAudio(config.vk_cookie, self.__client)
         self.__rates_service = NbrbRatesWrapper(self.__client)
         self.__weather_service = YahooWeatherWrapper(self.__client)
+        self.__geo_service = YahooGeoApi(self.__client)
         self.__update_rates()
         self.__update_weather()
         self.__rates_scheduler = Scheduler(self.__update_rates)
@@ -73,6 +76,9 @@ class Facade:
 
     def get_date_formatted(self):
         return datetime.date.today().strftime("%A, %d %B %Y")
+
+    def get_place_woeid(self, query):
+        return self.__geo_service.get_places(query).to_json()
 
     def __update_rates(self):
         cur_rate = self.__rates_service.get_today_rate('USD')
