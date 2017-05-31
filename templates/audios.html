@@ -42,9 +42,10 @@
             <li><a href="/rates">Exchange Rates</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li id="weather" data-toggle="popover" title="Weather Forecast" data-content="" data-placement="bottom"><a href="#">Weather</a></li>
+            <li><button class="btn btn-link navbar-btn" style="text-decoration: none; color: #fff">USD/BYN: {{ currency_rate }}</button></li>
+            <li><button class="btn btn-link navbar-btn" style="text-decoration: none; color: #fff" id="weather" data-toggle="popover" data-trigger="hover" title="Weather Forecast" data-content="" data-placement="bottom"></button></li>
+            <li><button class="btn btn-link navbar-btn" style="text-decoration: none; color: #fff"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span></button></li>
           </ul>
-          <button class="btn btn-danger navbar-btn navbar-right">USD/BYN: {{ currency_rate }}</button>
         </div><!--/.nav-collapse -->
       </div>
     </nav>

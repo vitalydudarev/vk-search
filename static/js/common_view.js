@@ -5,9 +5,9 @@ function setView(jData) {
   }
   else {
     $("#weather").attr('data', JSON.stringify(pData))
-    $("#weather a").text(pData.result.condition.temp + '° ' + pData.result.condition.text);
+    $("#weather").text(pData.result.condition.temp + '° ' + pData.result.condition.text);
 
-    $("#weather").popover({ html: true, animation: true, trigger: "click", placement: 'auto' })
+    $("#weather").popover({ html: true, animation: true, trigger: "hover", placement: 'auto' })
       .on("show.bs.popover", function () {
         var _this = this;
         var data = $('#weather').attr('data');
