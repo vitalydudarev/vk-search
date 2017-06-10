@@ -58,12 +58,13 @@ def weather():
 @app.route("/rutor")
 def rutor():
     data = __get_template_data()
-    return render_template("rutor.html", currency_rate = data['currency_rate'], forecast = data['forecast'])
+    return render_template("rutor.html", currency_rate=data['currency_rate'], forecast=data['forecast'])
 
 
 @app.route("/get_rutor_data")
 def get_rutor_data():
-    return facade.get_rutor_data()
+    index = int(request.args.get('index'))
+    return facade.get_rutor_data(index)
 
 
 @app.route("/search_place", methods=['POST', 'GET'])

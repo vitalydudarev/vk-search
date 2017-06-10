@@ -9,3 +9,11 @@
 body {
   font-family: 'Roboto', serif;
 }
+
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    display: none;
+}

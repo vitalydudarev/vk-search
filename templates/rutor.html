@@ -77,6 +77,8 @@
 
     </div>
 
+    <a id="back-to-top" href="#" class="btn btn-default btn-sm back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+
     <script src="static/js/jquery.min.js"></script>
     <script src="static/js/audiojs/audio.min.js"></script>
     <script src="static/js/player.js"></script>
@@ -95,54 +97,54 @@
 
     <script type="text/javascript">
 
-    $(document).ready(function() {
-  var win = $(window);
+      var index = 0;
 
-  // Each time the user scrolls
-  win.scroll(function() {
-    // End of the document reached?
-    if ($(document).height() - win.height() == win.scrollTop()) {
-      //$('#loading').show();
+      $(document).ready(function() {
+        var win = $(window);
+        var url = window.location;
 
-      $.ajax({
-        url: 'get_rutor_data',
-        dataType: 'html',
-        success: function(data) {
+        // highlight the page's link
+        $('ul.nav a[href="'+ url +'"]').parent().addClass('active');
+        $('ul.nav a').filter(function() {
+          return this.href == url;
+        }).parent().addClass('active');
 
-          var jsoned = JSON.parse(data)
+        // add Back To Top button
+        $(window).scroll(function() {
+          if ($(this).scrollTop() > 50) {
+            $('#back-to-top').fadeIn();
+          } else {
+            $('#back-to-top').fadeOut();
+          }
+        });
+        // scroll body to 0px on click
+        $('back-to-top').click(function() {
+          $('#back-to-top').tooltip('hide');
+          $('body,html').animate({
+            scrollTop: 0
+          }, 800);
+          return false;
+        });
+        
+        $('#back-to-top').tooltip('show');
 
-          var tbody = $('<tbody/>');
-          var table = $('#rutor_table');
-
-          $.each(jsoned, function (index, item) {
-            var td1 = $('<td/>').text(item.torrent_id);
-            var td2 = $('<td/>').text(item.title);
-            var td3 = $('<td/>').text(item.category);
-            var td4 = $('<td/>').text(item.size);
-            var td5 = $('<td/>').text(item.added);
-
-            tbody.append($('<tr/>').append(td1, td2, td3, td4, td5));
-          });
-
-          table.append(tbody);
-          //$('#posts').append(html);
-          //$('#loading').hide();
-        }
+        // infinite scroll
+        win.scroll(function() {
+          // End of the document reached?
+          if ($(document).height() - win.height() == win.scrollTop()) {
+            loadData();
+          }
+        });
       });
-    }
-  });
-});
 
       var waitDialog = $('#waitDialogModal');
       $('#rutor_table').hide();
 
-      loadData();
+      showWaitDialog();
+      loadData(closeWaitDialog);
 
-      function loadData() {
-        showWaitDialog();
-
-        $.get("/get_rutor_data", function(data) {
-
+      function loadData(callbackFunc) {
+        $.get("/get_rutor_data", { index: index}, function(data) {
           var jsoned = JSON.parse(data)
 
           var tbody = $('<tbody/>');
@@ -161,7 +163,10 @@
           table.append(tbody);
           $('#rutor_table').show();
           
-          closeWaitDialog();
+          if (callbackFunc != null)
+            callbackFunc();
+
+          index = index + 100;
         });
       }
 
@@ -172,7 +177,7 @@
       function closeWaitDialog() {
         waitDialog.modal('hide');
       }
-
+      
     </script>
 
     <!-- Bootstrap core JavaScript

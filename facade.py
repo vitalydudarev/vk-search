@@ -1,17 +1,15 @@
+import datetime
+import json
+import logging
 import re
+import utils
 from client import HttpClient
+from scheduler import Scheduler
+from storage import Storage
 from vk_audio import VkAudio
 from wrappers import YahooWeatherWrapper, NbrbRatesWrapper
 from yahoo_api import YahooGeoApi
-from storage import Storage
-from scheduler import Scheduler
-import datetime
-import json
-import utils
-import threading
-import logging
-from json import JSONEncoder
-
+from rutor import RutorDataHolder
 
 logging.basicConfig(level = logging.DEBUG, format = "%(asctime)s;%(levelname)s;%(message)s")
 
@@ -34,6 +32,7 @@ class Facade:
         self.__weather_scheduler = Scheduler(self.__update_weather)
         self.__rates_scheduler.start(3600 * 24, 00, 00)
         self.__weather_scheduler.start(3600, 00)
+        self.__rutor_data_holder = RutorDataHolder('dump.txt')
 
     def get_current_rate(self):
         cur_rate = self.__storage.get('cur_rate')
@@ -84,11 +83,9 @@ class Facade:
     def get_place_woeid(self, query):
         return self.__geo_service.get_places(query).to_json()
 
-    def get_rutor_data(self):
-        with open('dump.txt', 'r') as file:
-            aaa = json.loads(file.read())
-            bbb = aaa[:10]
-            return json.dumps(bbb, cls=MyEncoder)
+    def get_rutor_data(self, index=0):
+        data = self.__rutor_data_holder.get_data(index)
+        return data
 
     def __update_rates(self):
         cur_rate = self.__rates_service.get_today_rate('USD')
