@@ -1,7 +1,7 @@
 function setView(jData) {
   var pData = JSON.parse(jData);
   if (pData.has_error) {
-    $("#weather a").text("Weather unavailable");
+    $("#weather").text("Weather unavailable");
   }
   else {
     $("#weather").attr('data', JSON.stringify(pData))
@@ -9,10 +9,7 @@ function setView(jData) {
 
     $("#weather").popover({ html: true, animation: true, trigger: "hover", placement: 'auto' })
       .on("show.bs.popover", function () {
-        var _this = this;
         var data = $('#weather').attr('data');
-
-        var body = "";
         var jsoned = JSON.parse(data)
 
         var tbody = $('<tbody/>');
