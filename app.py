@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import config
 from facade import Facade
+from jinja2 import Template
 
 app = Flask(__name__)
 config = config.load_config('config.json')
@@ -50,15 +51,13 @@ def audio_info(id):
     return facade.vk_get_audio_info([id])
 
 
-@app.route("/weather")
-def weather():
-    return facade.get_current_weather()
-
-
 @app.route("/rutor")
 def rutor():
     data = __get_template_data()
-    return render_template("rutor.html", currency_rate=data['currency_rate'], forecast=data['forecast'])
+    header = __get_header()
+    template = Template(header)
+    header_str = template.render(currency_rate=data['currency_rate'])
+    return render_template("rutor.html", header=header_str, forecast=data['forecast'])
 
 
 @app.route("/get_rutor_data")
@@ -71,15 +70,26 @@ def get_rutor_data():
 def search_place():
     if request.method == 'GET':
         data = __get_template_data()
-        return render_template("search_place.html", currency_rate = data['currency_rate'], forecast = data['forecast'])
+        header = __get_header()
+        template = Template(header)
+        header_str = template.render(currency_rate=data['currency_rate'])
+        return render_template("search_place.html", header=header_str, forecast = data['forecast'])
     if request.method == 'POST':
         query = request.form['query']
         return facade.get_place_woeid(query)
+
 
 def __get_template_data():
     rate = facade.get_current_rate()
     forecast = facade.get_current_weather()
     return { 'currency_rate': rate, 'forecast': forecast }
+
+
+def __get_header():
+        with open('templates/header.html', 'r') as file:
+            print 'opened'
+            return file.read()
+
 
 if __name__ == "__main__":
     # app.run(host='0.0.0.0')
