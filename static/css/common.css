@@ -1,13 +1,23 @@
-.popover{
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-family: 'Roboto', serif;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.navbar-inverse .navbar-header .navbar-brand {
+    color: #f0ad4e;
+}
+
+.popover {
   max-width: 600px;
 }
 
-.table {
+.popover-table {
   width: 400px;
-}
-
-body {
-  font-family: 'Roboto', serif;
 }
 
 .back-to-top {
