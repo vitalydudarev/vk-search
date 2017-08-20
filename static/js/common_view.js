@@ -14,7 +14,7 @@ function setView(jData) {
 
         var tbody = $('<tbody/>');
         var table = $('<div/>').attr('class', 'table-responsive')
-          .append($('<table/>').attr('class', 'table table-bordered')
+          .append($('<table/>').attr('class', 'table table-bordered popover-table')
             .append(tbody));
 
         $.each(jsoned.result.forecast, function (index, item) {
