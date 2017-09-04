@@ -6,3 +6,4 @@ api = YahooGeoApi(client)
 
 print api.get_place('DXB').to_json()
 print api.get_places('Minsk').to_json()
+print api.get_places('Incorrectcity').to_json()

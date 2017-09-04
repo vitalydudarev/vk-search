@@ -27,6 +27,9 @@ class YahooGeoApi:
             return ApiResponse(has_error=True, error_description='Connection error')
 
         j_resp = json.loads(response.response_text)
+        
+        if j_resp['query']['results'] is None:
+            return ApiResponse(result=[])
 
         places = j_resp['query']['results']['place']
         count = int(j_resp['query']['count'])
