@@ -4,7 +4,7 @@ import os.path
 
 class RutorDataHolder:
 
-    __data = {}
+    __data = []
 
     def __init__(self, file_name):
         if os.path.isfile(file_name):
@@ -14,6 +14,8 @@ class RutorDataHolder:
                 self.__data = sorted(res, key=lambda k: k['torrent_id'], reverse=True)
 
     def get_data(self, index=0):
+        if len(self.__data) == 0:
+            return json.dumps([], cls=Encoder)
         result = [self.__data[i] for i in range(index, index + 100)]
         return json.dumps(result, cls=Encoder)
 
