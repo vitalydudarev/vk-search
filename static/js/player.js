@@ -13,9 +13,6 @@ function createPlyr() {
     tracks[i].onclick = changeChannel;
   }
 
-  if (tracks.length > 0)
-    setSource(getId(tracks[0]));
-
   plyrElement.addEventListener('ended', nextSong);
 }
 
