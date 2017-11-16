@@ -146,7 +146,7 @@
 
             var id = 0;
             
-            $.each(data.result, function (index, item) {
+            $.each(data.result.items, function (index, item) {
               $('<li/>')
                 .attr('data-id', id.toString())
                 .attr('data-track-id', item.track_id)

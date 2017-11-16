@@ -54,7 +54,12 @@ class VkAudio:
             duration = item[5]
             result.append({"track_id": track_id, "title": title, "duration": duration})
 
-        return ApiResponse(result=result).to_json()
+        response = {'hasMore': True if j_object['hasMore'] == 1 else False,
+                    'nextOffset': j_object['nextOffset'],
+                    'totalCount': j_object['totalCount'],
+                    'items': result}
+
+        return ApiResponse(result=response).to_json()
 
     def get_audio_list(self, owner_id):
         headers = {"cookie": self.__cookie}
@@ -76,9 +81,9 @@ class VkAudio:
 
         return ApiResponse(result=result).to_json()
 
-    def search(self, query):
+    def search(self, query, offset = 0):
         headers = {"cookie": self.__cookie}
-        params = {"act": "load_section", "al": 1, "claim": 0, "offset": 0, "search_history": 0, "search_q": query, "type": "search"}
+        params = {"act": "load_section", "al": 1, "claim": 0, "offset": offset, "search_history": 0, "search_q": query, "type": "search"}
 
         j_object = self.__get_response(headers, params)
         if j_object is None:
@@ -94,7 +99,12 @@ class VkAudio:
             duration = item[5]
             result.append({"track_id": track_id, "title": title, "duration": duration})
 
-        return ApiResponse(result=result).to_json()
+        response = {'hasMore': True if j_object['hasMore'] == 1 else False,
+                    'nextOffset': j_object['nextOffset'],
+                    'totalCount': j_object['totalCount'],
+                    'items': result}
+
+        return ApiResponse(result=response).to_json()
 
     def __get_response(self, headers, params):
         resp = self.__client.post(self.__url, headers, params)

@@ -4,16 +4,22 @@ var tracks = null;
 
 function createPlyr() {
   var plyrElement = document.querySelector('.plyr');
-  var playlist = document.querySelector('.playlist');
+  
   plyr.setup(plyrElement);
   player = plyrElement.plyr;
+  
+  updatePlaylist();
+  
+  plyrElement.addEventListener('ended', nextSong);
+}
+
+function updatePlaylist() {
+  var playlist = document.querySelector('.playlist');
   tracks = playlist.querySelectorAll('.playlist--list li');
 
   for (var i = 0; i < tracks.length; i++) {
     tracks[i].onclick = changeChannel;
   }
-
-  plyrElement.addEventListener('ended', nextSong);
 }
 
 function changeChannel(e) {

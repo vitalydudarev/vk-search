@@ -30,7 +30,8 @@ def audios():
         data = __get_template_data()
         return render_template("audios.html", currency_rate = data['currency_rate'], forecast = data['forecast'])
     if request.method == 'POST':
-        return facade.vk_get_audio_list(config.user_id)
+        offset = request.form['offset']
+        return facade.vk_get_audio_list(config.user_id, offset)
 
 
 @app.route("/rates")
