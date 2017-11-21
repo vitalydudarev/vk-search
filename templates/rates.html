@@ -68,26 +68,21 @@
         </div>
       </div>
 
-      <div class="panel panel-default">
-        <div class="panel-heading">Exchange rates</div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-sm-11" style="padding-right:20px; border-right: 1px solid #ccc;">
-                <div>
-                  <canvas id="canvas"></canvas>
-                </div>
-              </div>
-              <div class="col-sm-1">
-                <div class="btn-group-vertical" role="group" aria-label="...">
-                  <button type="button" class="btn btn-primary" tenor="1W">1W</button>
-                  <button type="button" class="btn btn-default" tenor="2W">2W</button>
-                  <button type="button" class="btn btn-default" tenor="1M">1M</button>
-                  <button type="button" class="btn btn-default" tenor="3M">3M</button>
-                  <button type="button" class="btn btn-default" tenor="6M">6M</button>
-                </div>
-              </div>
-            </div>
+      <div class="row">
+        <div class="col-sm-11" style="padding-right:20px; border-right: 1px solid #ccc;">
+          <div>
+            <canvas id="canvas"></canvas>
           </div>
+        </div>
+        <div class="col-sm-1">
+          <div class="btn-group-vertical" role="group" aria-label="...">
+            <button type="button" class="btn btn-primary" tenor="1W">1W</button>
+            <button type="button" class="btn btn-default" tenor="2W">2W</button>
+            <button type="button" class="btn btn-default" tenor="1M">1M</button>
+            <button type="button" class="btn btn-default" tenor="3M">3M</button>
+            <button type="button" class="btn btn-default" tenor="6M">6M</button>
+          </div>
+        </div>
       </div>
 
     </div> <!-- /container -->
@@ -101,7 +96,10 @@
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="static/js/ie10-viewport-bug-workaround.js"></script>
-    <script src="static/js/Chart.bundle.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.2/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
+    <script src="http://www.chartjs.org/samples/latest/utils.js"></script>
 
     <script type="text/javascript">
       setView({{ forecast | tojson | safe }});
@@ -117,114 +115,94 @@
             .removeClass('btn btn-default').addClass('btn btn-primary').siblings()
             .removeClass('btn btn-primary').addClass('btn btn-default');
 
-        $.getJSON('/get_rates', { tenor: tenor, currency: 'USD' }, function(data) {
-          var keys = [];
-          var values = [];
-
-          $.each(data.result, function(key, val) {
-            keys.push(key);
-            values.push(val);
-          });
-
-          config.data.labels = keys;
-          config.data.datasets[0].data = values;
-          chart.update();
-        });
+        loadData(tenor, 'USD');
       })
 
       $(function() {
-        init();
-        loadData();
+        initChart();
+        loadData('1W', 'USD');
       });
 
-      function init() {
+      function initChart() {
+        var background = randomColor(0.5);
+        console.log(background);
+        
         config = {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: "Rate",
-                    data: [],
-                    lineTension: 0,
-                    fill: false,
-                    pointHitRadius: 20,
-                }]
+          type: 'line',
+          data: {
+            labels: [],
+            datasets: [{
+              label: '',
+              backgroundColor: background,
+              borderColor: background,
+              fill: false,
+              data: [],
+              lineTension: 0
+            }]
+          },
+          options: {
+            animation: false,
+            responsive: true,
+            legend: {
+                display: false,
+                position: 'bottom',
             },
-            options: {
-                animation: false,
-                responsive: true,
-                legend: {
-                    display: false,
-                    position: 'bottom',
+            hover: {
+                mode: 'label'
+            },
+            scales: {
+              xAxes: [{
+                type: 'time',
+                time: {
+                  minUnit: 'day',
+                  format: 'MMM DD',
+                  tooltipFormat: 'll',
+                  displayFormats: {
+                    'day': 'MMM DD'
+                  },
                 },
-                hover: {
-                    mode: 'label'
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Date'
-                        },
-                        type: 'time',
-                        unit: 'day',
-                        unitStepSize: 1,
-                        time: {
-                            displayFormats: {
-                                'day': 'MMM DD YYYY'
-                            }
-                        }
-                    }],
-                    yAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Rate'
-                        }
-                    }]
+                scaleLabel: {
+                  display: false,
+                  labelString: 'Date'
                 }
-            }
+              }],
+              yAxes: [{
+                display: true,
+                scaleLabel: {
+                  display: false,
+                  labelString: 'Rate'
+                }
+              }]
+            },
+          }
         };
-
-        $.each(config.data.datasets, function(i, dataset) {
-            var background = randomColor(0.5);
-            dataset.borderColor = background;
-            dataset.backgroundColor = background;
-            dataset.pointBorderColor = background;
-            dataset.pointBackgroundColor = background;
-            dataset.pointBorderWidth = 1;
-        });
 
         var ctx = document.getElementById("canvas").getContext("2d");
-        chart = new Chart(ctx, config);        
+        chart = new Chart(ctx, config);
       }
 
-        var randomColorFactor = function() {
-            return Math.round(Math.random() * 255);
-        };
-        var randomColor = function(opacity) {
-            return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
-        };
-
-      function loadData() {
-        $.getJSON("/get_rates", { tenor: '1W', currency: 'USD' }, function(data) {
-          var keys = [];
+      function loadData(tenor, currency) {
+        $.getJSON("/get_rates", { tenor: tenor, currency: currency }, function(data) {
           var values = [];
+          var labels = [];
 
           $.each(data.result, function(key, val) {
-            keys.push(key);
+            labels.push(moment(key));
             values.push(val);
           });
 
-          config.data.labels = keys;
+          config.data.labels = labels;
           config.data.datasets[0].data = values;
+
           chart.update();
         });
       }
 
-      function replaceAll(str, search, replacement) {
-        return str.split(search).join(replacement);
+      var randomColorFactor = function() {
+          return Math.round(Math.random() * 255);
+      };
+      var randomColor = function(opacity) {
+          return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
       };
     </script>
   </body>
