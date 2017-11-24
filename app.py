@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 import config
 from facade import Facade
 from jinja2 import Template
@@ -18,7 +18,9 @@ def home():
 def search():
     if request.method == 'GET':
         data = __get_template_data()
-        return render_template("search.html", currency_rate = data['currency_rate'], forecast = data['forecast'])
+        resp = make_response(render_template("search.html", currency_rate = data['currency_rate'], forecast = data['forecast']))
+        resp.set_cookie('vkUserId', str(config.user_id))
+        return resp
     if request.method == 'POST':
         query = request.form['value']
         return facade.vk_search(query)
@@ -28,7 +30,9 @@ def search():
 def audios():
     if request.method == 'GET':
         data = __get_template_data()
-        return render_template("audios.html", currency_rate = data['currency_rate'], forecast = data['forecast'])
+        resp = make_response(render_template("audios.html", currency_rate = data['currency_rate'], forecast = data['forecast']))
+        resp.set_cookie('vkUserId', str(config.user_id))
+        return resp
     if request.method == 'POST':
         offset = request.form['offset']
         return facade.vk_get_audio_list(config.user_id, offset)

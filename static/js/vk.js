@@ -45,7 +45,7 @@ function s(t, e) {
         o = [];
     if (i) {
         var a = i;
-        for (e = Math.abs(e); a--;) o[a] = (e += e * (a + i) / e) % i | 0
+        for (e = Math.abs(e); a--;) e = (i * (a + 1) ^ e + a) % i, o[a] = e
     }
     return o
 }
@@ -69,6 +69,9 @@ l = {
             t = t.join("")
         }
         return t
+    },
+    i: function(t, e) {
+        return l.s(t, e ^ getCookie('vkUserId'))
     },
     x: function(t, e) {
         var i = [];
