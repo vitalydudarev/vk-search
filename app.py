@@ -22,8 +22,9 @@ def search():
         resp.set_cookie('vkUserId', str(config.user_id))
         return resp
     if request.method == 'POST':
-        query = request.form['value']
-        return facade.vk_search(query)
+        query = request.form['query']
+        offset = request.form['offset']
+        return facade.vk_search(query, offset)
 
 
 @app.route("/audios", methods=['POST', 'GET'])

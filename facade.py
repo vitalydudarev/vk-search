@@ -68,8 +68,8 @@ class Facade:
             s_end = utils.string_to_date(end, "%Y-%m-%d")
             return self.__rates_service.get_rates_dynamics(currency, s_start, s_end)
 
-    def vk_search(self, query):
-        return self.__vk_audio.search(query)
+    def vk_search(self, query, offset=0):
+        return self.__vk_audio.search(query, offset)
 
     def vk_get_audio_list(self, user_id, offset=0):
         return self.__vk_audio.get_playlist(user_id, offset)

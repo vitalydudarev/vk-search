@@ -14,11 +14,9 @@
 
     <!-- Bootstrap core CSS -->
     <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="static/css/audio.css" rel="stylesheet" type="text/css">
-    <link href="static/css/offcanvas.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link href="static/css/common.css" rel="stylesheet">
-    <link rel='stylesheet prefetch' href='http://cdn.plyr.io/1.6.13/plyr.css'>
+    <link rel="stylesheet prefetch" href="https://cdn.plyr.io/2.0.18/plyr.css">
     <link rel="stylesheet" href="static/css/player.css">
   </head>
 
@@ -99,7 +97,7 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="static/js/ie10-viewport-bug-workaround.js"></script>
 
-    <script src='http://cdn.plyr.io/1.6.13/plyr.js'></script>
+    <script src="http://cdn.plyr.io/2.0.18/plyr.js"></script>
     <script src="static/js/player.js"></script>
 
     <script type="text/javascript">
@@ -107,6 +105,43 @@
     </script>
 
     <script type="text/javascript">
+
+      var id = 0;
+      var offset = 0;
+      var playerCreated = false;
+      var loadMore = false;
+
+      $(document).ready(function() {
+        var win = $(window);
+
+        // add Back To Top button
+        $(window).scroll(function() {
+          if ($(this).scrollTop() > 50) {
+            $('#back-to-top').fadeIn();
+          } else {
+            $('#back-to-top').fadeOut();
+          }
+        });
+        // scroll body to 0px on click
+        $('back-to-top').click(function() {
+          $('#back-to-top').tooltip('hide');
+          $('body,html').animate({
+            scrollTop: 0
+          }, 800);
+          return false;
+        });
+        
+        $('#back-to-top').tooltip('show');
+
+        // infinite scroll
+        win.scroll(function() {
+          // End of the document reached?
+          if ($(document).height() - win.height() == win.scrollTop()) {
+            if (loadMore)
+              search();
+          }
+        });
+      });
 
       function getCookie(cname) {
         var name = cname + "=";
@@ -130,21 +165,22 @@
         $('#search_input').keypress(function(e) {
           if (e.which == 13) {
             //$("#audioPlaylist").empty();
-            search();
+            search(closeWaitDialog);
           }
         });
 
         $('#search_button').click(function(event) {
           //$("#audioPlaylist").empty();
-          search();
+          search(closeWaitDialog);
         });
       });
 
-      function search() {
-        showWaitDialog();
+      function search(callbackFunc) {
+        if (callbackFunc != null)
+          showWaitDialog();
 
-        var value = $('#search_input').val();
-        $.post('/search', { value: value }, function(data) {
+        var query = $('#search_input').val();
+        $.post('/search', { query: query, offset: offset }, function(data) {
           if (data.has_error) {
             closeWaitDialog();
             var errorDiv = $("<div class=\"alert alert-danger\" role=\"alert\"></div>");
@@ -159,8 +195,6 @@
           }
           else {
             var trackInfoBar = "<span class=\"pull-right\"><button class=\"btn btn-xs btn-link\">{duration}</button></span>";
-
-            var id = 0;
             
             $.each(data.result.items, function (index, item) {
               $('<li/>')
@@ -173,8 +207,18 @@
               id++;
             });
 
-            createPlyr();
-            closeWaitDialog();
+            offset = data.result.nextOffset;
+            loadMore = data.result.hasMore;
+
+            if (!playerCreated) {
+              createPlyr();
+              playerCreated = true;
+            }
+            else
+              updatePlaylist();
+
+            if (callbackFunc != null)
+              callbackFunc();
           }
         }, 'json');
       }

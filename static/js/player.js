@@ -5,8 +5,8 @@ var tracks = null;
 function createPlyr() {
   var plyrElement = document.querySelector('.plyr');
   
-  plyr.setup(plyrElement);
-  player = plyrElement.plyr;
+  var players = plyr.setup(plyrElement);
+  player = players[0];
   
   updatePlaylist();
   
