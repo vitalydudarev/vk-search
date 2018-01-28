@@ -164,13 +164,13 @@
       $(function() {
         $('#search_input').keypress(function(e) {
           if (e.which == 13) {
-            //$("#audioPlaylist").empty();
+            $("#audioPlaylist").empty();
             search(closeWaitDialog);
           }
         });
 
         $('#search_button').click(function(event) {
-          //$("#audioPlaylist").empty();
+          $("#audioPlaylist").empty();
           search(closeWaitDialog);
         });
       });
