@@ -23,7 +23,8 @@ def search():
     if request.method == 'GET':
         data = __get_template_data()
         resp = make_response(render_template("search.html", currency_rate=data['currency_rate'], forecast=data['forecast']))
-        resp.set_cookie('vkUserId', str(config.user_id))
+        if config.user_id is not None:
+            resp.set_cookie('vkUserId', str(config.user_id))
         return resp
     if request.method == 'POST':
         query = request.form['query']
@@ -36,7 +37,8 @@ def audios():
     if request.method == 'GET':
         data = __get_template_data()
         resp = make_response(render_template("audios.html", currency_rate=data['currency_rate'], forecast=data['forecast']))
-        resp.set_cookie('vkUserId', str(config.user_id))
+        if config.user_id is not None:
+            resp.set_cookie('vkUserId', str(config.user_id))
         return resp
     if request.method == 'POST':
         offset = request.form['offset']
