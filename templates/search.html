@@ -164,12 +164,14 @@
       $(function() {
         $('#search_input').keypress(function(e) {
           if (e.which == 13) {
+            id = 0;
             $("#audioPlaylist").empty();
             search(closeWaitDialog);
           }
         });
 
         $('#search_button').click(function(event) {
+          id = 0;
           $("#audioPlaylist").empty();
           search(closeWaitDialog);
         });
