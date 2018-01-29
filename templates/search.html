@@ -185,17 +185,22 @@
 
         var query = $('#search_input').val();
         $.post('/search', { query: query, offset: offset }, function(data) {
-          console.log(data);
+          var hasError = false;
+          var errorMessage = '';
+
           if (data.has_error) {
-            closeWaitDialog();
-            var errorDiv = $("<div class=\"alert alert-danger\" role=\"alert\"></div>");
-            errorDiv.text('Error loading data: ' + data.error_description);
-            $('#container').append(errorDiv);
+            hasError = true;
+            errorMessage = 'Error loading data: ' + data.error_description;
           }
-          else if (data.result.length == 0) {
+          else if (data.result.items.length == 0) {
+            hasError = true;
+            errorMessage = 'Nothing found.';
+          }
+
+          if (hasError) {
             closeWaitDialog();
             var errorDiv = $("<div class=\"alert alert-danger\" role=\"alert\"></div>");
-            errorDiv.text('Nothing found.');
+            errorDiv.text(errorMessage);
             $('#container').append(errorDiv);
           }
           else {
