@@ -16,10 +16,10 @@ body {
 }
 
 .back-to-top {
-    cursor: pointer;
-    position: fixed;
-    padding-bottom: 50px;
-    bottom: 15px;
-    right: 15px;
-    display: none;
+  cursor: pointer;
+  position: fixed;
+  margin-bottom: 50px;
+  bottom: 15px;
+  right: 15px;
+  display: none;
 }
