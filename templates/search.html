@@ -166,18 +166,21 @@
       $(function() {
         $('#search_input').keypress(function(e) {
           if (e.which == 13) {
-            id = 0;
-            $("#audioPlaylist").empty();
-            search(closeWaitDialog);
+            searchInternal();
           }
         });
 
         $('#search_button').click(function(event) {
-          id = 0;
-          $("#audioPlaylist").empty();
-          search(closeWaitDialog);
+          searchInternal();
         });
       });
+
+      function searchInternal() {
+        id = 0;
+        $("#audioPlaylist").empty();
+        $('#error').remove();
+        search(closeWaitDialog);
+      }
 
       function search(callbackFunc) {
         if (callbackFunc != null)
@@ -199,7 +202,7 @@
 
           if (hasError) {
             closeWaitDialog();
-            var errorDiv = $("<div class=\"alert alert-danger\" role=\"alert\"></div>");
+            var errorDiv = $("<div class=\"alert alert-danger\" role=\"alert\" id=\"error\"></div>");
             errorDiv.text(errorMessage);
             $('#container').append(errorDiv);
           }
