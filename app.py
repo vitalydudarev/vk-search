@@ -104,4 +104,4 @@ def __get_header():
 
 if __name__ == "__main__":
     # app.run(host='0.0.0.0')
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
