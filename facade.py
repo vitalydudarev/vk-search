@@ -24,13 +24,13 @@ class VkAudioFacade:
         self.__vk_audio = VkAudio(config.vk_cookie, self.__client)
 
     def audio_search(self, query, offset=0):
-        return self.__vk_audio.search(query, offset)
+        return self.__vk_audio.search(query, offset).to_json()
 
     def get_audio_list(self, user_id, offset=0):
-        return self.__vk_audio.get_playlist(user_id, offset)
+        return self.__vk_audio.get_playlist(user_id, offset).to_json()
 
     def get_audio_info(self, id):
-        return self.__vk_audio.get_audio_info(id)
+        return self.__vk_audio.get_audio_info(id).to_json()
 
 class WeatherFacade:
     def __init__(self, config):
