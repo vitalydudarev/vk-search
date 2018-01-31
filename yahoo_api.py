@@ -66,7 +66,7 @@ class YahooWeatherApi:
 
         response = self.__client.get_response(uri)
         if response.has_error:
-            return ApiResponse(has_error=True, error_description='Connection error').to_json()
+            return ApiResponse(has_error=True, error_description='Connection error')
 
         j_resp = json.loads(response.response_text)
 
@@ -86,9 +86,9 @@ class YahooWeatherApi:
                 res_for = {'day': item['day'], 'date': item['date'], 'high': item['high'], 'low': item['low'], 'text': item['text']}
                 res_forecast.append(res_for)
         else:
-            return ApiResponse(has_error=True, error_description='Yahoo API error').to_json()
+            return ApiResponse(has_error=True, error_description='Yahoo API error')
 
         res['condition'] = res_condition
         res['forecast'] = res_forecast
 
-        return ApiResponse(result=res).to_json()
+        return ApiResponse(result=res)

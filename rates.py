@@ -30,30 +30,30 @@ class NbrbRates:
 
         response = self.__client.get_response(uri)
         if response.has_error:
-            return ApiResponse(has_error=True, error_description='Connection error').to_json()
+            return ApiResponse(has_error=True, error_description='Connection error')
 
         j_resp = json.loads(response.response_text)
-        return ApiResponse(result=j_resp['Cur_OfficialRate']).to_json()
+        return ApiResponse(result=j_resp['Cur_OfficialRate'])
 
     def get_rate(self, currency, date):
         uri = self.url_rate.replace('{ccy_id}', currency).replace('{date}', utils.date_to_string(date, self.DATE_FORMAT))
 
         response = self.__client.get_response(uri)
         if response.has_error:
-            return ApiResponse(has_error=True, error_description='Connection error').to_json()
+            return ApiResponse(has_error=True, error_description='Connection error')
 
         j_resp = json.loads(response.response_text)
-        return ApiResponse(result=j_resp['Cur_OfficialRate']).to_json()
+        return ApiResponse(result=j_resp['Cur_OfficialRate'])
 
     def get_rates_dynamics(self, currency, from_date, to_date):
         if self.__cur_mapping is None:
             self.__cur_mapping = self.get_currencies()
             if self.__cur_mapping is None or len(self.__cur_mapping) == 0:
                 logging.debug(u'Initialization failed')
-                return ApiResponse(has_error=True, error_description='Connection error on initialization').to_json()
+                return ApiResponse(has_error=True, error_description='Connection error on initialization')
 
         if currency not in self.__cur_mapping:
-            return ApiResponse(has_error=True, error_description='Unsupported/unknown currency').to_json()
+            return ApiResponse(has_error=True, error_description='Unsupported/unknown currency')
 
         currency_id = self.__cur_mapping[currency]
 
@@ -64,7 +64,7 @@ class NbrbRates:
 
         response = self.__client.get_response(uri)
         if response.has_error:
-            return ApiResponse(has_error=True, error_description='Connection error').to_json()
+            return ApiResponse(has_error=True, error_description='Connection error')
 
         j_resp = json.loads(response.response_text)
 
@@ -76,7 +76,7 @@ class NbrbRates:
             rate = item['Cur_OfficialRate']
             rates[str_date] = rate
 
-        return ApiResponse(result=collections.OrderedDict(sorted(rates.items()))).to_json()
+        return ApiResponse(result=collections.OrderedDict(sorted(rates.items())))
 
     def get_currencies(self):
         response = self.__client.get_response(self.url_currencies)

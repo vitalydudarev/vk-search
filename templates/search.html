@@ -191,9 +191,9 @@
           var hasError = false;
           var errorMessage = '';
 
-          if (data.has_error) {
+          if (data.hasError) {
             hasError = true;
-            errorMessage = 'Error loading data: ' + data.error_description;
+            errorMessage = 'Error loading data: ' + data.errorDescription;
           }
           else if (data.result.items.length == 0) {
             hasError = true;
@@ -212,7 +212,7 @@
             $.each(data.result.items, function (index, item) {
               $('<li/>')
                 .attr('data-id', id.toString())
-                .attr('data-track-id', item.track_id)
+                .attr('data-track-id', item.trackId)
                 .attr('data-title', item.title)
                 .html(item.title + trackInfoBar.replace('{duration}', toTime(item.duration)))
                 .appendTo('#audioPlaylist');

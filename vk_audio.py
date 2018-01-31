@@ -27,7 +27,7 @@ class VkAudio:
         for item in items:
             track_id = str(item[1]) + '_' + str(item[0])
             link = item[2]
-            result.append({'track_id': track_id, 'link': link})
+            result.append({'trackId': track_id, 'link': link})
 
         res = result[0] if len(result) == 1 else result
 
@@ -70,7 +70,7 @@ class VkAudio:
             track_id = str(item[1]) + '_' + str(item[0])
             title = self.__parser.unescape(item[4] + " - " + item[3])
             duration = item[5]
-            result.append({'track_id': track_id, 'title': title, 'duration': duration})
+            result.append({'trackId': track_id, 'title': title, 'duration': duration})
 
         response = {'hasMore': True if resp_internal['hasMore'] == 1 else False,
                     'nextOffset': resp_internal['nextOffset'],

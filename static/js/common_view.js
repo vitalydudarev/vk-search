@@ -1,6 +1,6 @@
 function setView(jData) {
   var pData = JSON.parse(jData);
-  if (pData.has_error) {
+  if (pData.hasError) {
     $("#weather").text("Weather unavailable");
   }
   else {

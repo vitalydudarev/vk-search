@@ -46,7 +46,7 @@ class WeatherFacade:
         return weather
 
     def __update_weather(self):
-        weather = self.__weather_service.get_forecast(834463)
+        weather = self.__weather_service.get_forecast(834463).to_json()
         logging.info(u'Updated weather')
         self.__storage.add('weather', weather)
 
@@ -79,7 +79,7 @@ class RatesFacade:
                         start = utils.month_delta(end, tenor_i * -1)
                     elif m_w in ['w', 'W']:
                         start = end - datetime.timedelta(days=7 * tenor_i)
-                    rates = self.__rates_service.get_rates_dynamics(currency, start, end)
+                    rates = self.__rates_service.get_rates_dynamics(currency, start, end).to_json()
                     self.__storage.add(key, rates)
                     return rates
                 else:
@@ -87,10 +87,10 @@ class RatesFacade:
         else:
             s_start = utils.string_to_date(start, "%Y-%m-%d")
             s_end = utils.string_to_date(end, "%Y-%m-%d")
-            return self.__rates_service.get_rates_dynamics(currency, s_start, s_end)
+            return self.__rates_service.get_rates_dynamics(currency, s_start, s_end).to_json()
 
     def __update_rates(self):
-        cur_rate = self.__rates_service.get_today_rate('USD')
+        cur_rate = self.__rates_service.get_today_rate('USD').to_json()
         logging.info(u'Updated rates')
         self.__storage.add('cur_rate', cur_rate)
 
