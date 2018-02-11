@@ -18,6 +18,29 @@
     <link href="static/css/common.css" rel="stylesheet">
     <link rel="stylesheet prefetch" href="https://cdn.plyr.io/2.0.18/plyr.css">
     <link rel="stylesheet" href="static/css/player.css">
+    <link rel="stylesheet" type="text/css" href="static/css/loadme.css">
+    <style>
+      .loadme-mask {
+        display: none;
+      }
+
+      .overlay {
+        background: #e9e9e9;
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 0.5;
+        z-index: 2;
+      }
+
+      #load-indicator {
+        display: none;
+      }
+        
+    </style>
   </head>
 
   <body>
@@ -51,8 +74,17 @@
     </nav>
 
     <div class="container" id="container">
+      <div class="overlay"></div>
+      <div id="load-indicator">
+        <div class="loadme-bounced">
+          <div class="loadme-bounced-child loadme-bounced1"></div>
+          <div class="loadme-bounced-child loadme-bounced2"></div>
+          <div class="loadme-bounced-child loadme-bounced3"></div>
+        </div>
+        <div class="loadme-mask"></div>
+      </div>
 
-      <div class="row">
+      <div class="row" id="search-bar">
         <div class="col-lg-12">
           <div class="input-group">
             <input type="text" class="form-control" placeholder="Search" id="search_input">
@@ -67,21 +99,11 @@
         <ul class='playlist--list' id="audioPlaylist"></ul>
       </div>
 
-    </div>
+      <a id="back-to-top" href="#" class="btn btn-default btn-sm back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left">
+        <span class="glyphicon glyphicon-chevron-up"></span>
+      </a>
 
-    <div class="modal fade" id="waitDialogModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4>Searching...</h4>
-          </div>
-        </div>
-      </div>
     </div>
-
-    <a id="back-to-top" href="#" class="btn btn-default btn-sm back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left">
-      <span class="glyphicon glyphicon-chevron-up"></span>
-    </a>
 
     <div class="navbar navbar-default navbar-fixed-bottom">
       <div class="plyr">
@@ -110,11 +132,12 @@
 
       var id = 0;
       var offset = 0;
-      var playerCreated = false;
       var loadMore = false;
 
       $(document).ready(function() {
         var win = $(window);
+
+        createPlyr();
 
         // add Back To Top button
         $(window).scroll(function() {
@@ -161,8 +184,6 @@
         return "";
       }
 
-      var waitDialog = $('#waitDialogModal');
-
       $(function() {
         $('#search_input').keypress(function(e) {
           if (e.which == 13) {
@@ -179,12 +200,12 @@
         id = 0;
         $("#audioPlaylist").empty();
         $('#error').remove();
-        search(closeWaitDialog);
+        search(closeLoadIndicator);
       }
 
       function search(callbackFunc) {
         if (callbackFunc != null)
-          showWaitDialog();
+          showLoadIndicator();
 
         var query = $('#search_input').val();
         $.post('/search', { query: query, offset: offset }, function(data) {
@@ -201,7 +222,7 @@
           }
 
           if (hasError) {
-            closeWaitDialog();
+            closeLoadIndicator();
             var errorDiv = $("<div class=\"alert alert-danger\" role=\"alert\" id=\"error\"></div>");
             errorDiv.text(errorMessage);
             $('#container').append(errorDiv);
@@ -223,12 +244,7 @@
             offset = data.result.nextOffset;
             loadMore = data.result.hasMore;
 
-            if (!playerCreated) {
-              createPlyr();
-              playerCreated = true;
-            }
-            else
-              updatePlaylist();
+            updatePlaylist();
 
             if (callbackFunc != null)
               callbackFunc();
@@ -236,12 +252,16 @@
         }, 'json');
       }
 
-      function showWaitDialog() {
-        waitDialog.modal('show');
+      function showLoadIndicator() {
+        $('#load-indicator').show();
+        $('.overlay').show();
+        $('#search-bar').hide();
       }
 
-      function closeWaitDialog() {
-        waitDialog.modal('hide');
+      function closeLoadIndicator() {
+        $('#load-indicator').hide();
+        $('.overlay').hide();
+        $('#search-bar').show();
       }
 
     </script>
