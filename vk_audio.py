@@ -67,7 +67,8 @@ class VkAudio:
         result = []
 
         for item in items:
-            track_id = str(item[1]) + '_' + str(item[0])
+            split = item[13].split('/')
+            track_id = str(item[1]) + '_' + str(item[0]) + '_' + split[2] + '_' + split[5]
             title = self.__parser.unescape(item[4] + " - " + item[3])
             duration = item[5]
             result.append({'trackId': track_id, 'title': title, 'duration': duration})
